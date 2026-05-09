@@ -1,0 +1,5 @@
+{{ if eq .chezmoi.os "darwin" }}
+.config/niri
+.config/DankMaterialShell
+.config/danksearch
+{{ end }}

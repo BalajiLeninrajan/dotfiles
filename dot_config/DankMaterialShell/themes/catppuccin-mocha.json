@@ -1,0 +1,42 @@
+{
+  "dark": {
+    "name": "Catppuccin Mocha",
+    "primary": "#cba6f7",
+    "primaryText": "#1e1e2e",
+    "primaryContainer": "#89dceb",
+    "secondary": "#fab387",
+    "surface": "#1e1e2e",
+    "surfaceText": "#a6adc8",
+    "surfaceVariant": "#181825",
+    "surfaceVariantText": "#cdd6f4",
+    "surfaceTint": "#cba6f7",
+    "background": "#1e1e2e",
+    "backgroundText": "#a6adc8",
+    "outline": "#6c7086",
+    "surfaceContainer": "#313244",
+    "surfaceContainerHigh": "#585b70",
+    "error": "#f38ba8",
+    "warning": "#f9e2af",
+    "info": "#89b4fa"
+  },
+  "light": {
+    "name": "Catppuccin Latte",
+    "primary": "#8839ef",
+    "primaryText": "#eff1f5",
+    "primaryContainer": "#04a5e5",
+    "secondary": "#fe640b",
+    "surface": "#eff1f5",
+    "surfaceText": "#6c6f85",
+    "surfaceVariant": "#e6e9ef",
+    "surfaceVariantText": "#4c4f69",
+    "surfaceTint": "#8839ef",
+    "background": "#eff1f5",
+    "backgroundText": "#6c6f85",
+    "outline": "#9ca0b0",
+    "surfaceContainer": "#ccd0da",
+    "surfaceContainerHigh": "#acb0be",
+    "error": "#d20f39",
+    "warning": "#df8e1d",
+    "info": "#1e66f5"
+  }
+}

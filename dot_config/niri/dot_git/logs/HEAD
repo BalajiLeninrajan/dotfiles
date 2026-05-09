@@ -1,0 +1,30 @@
+0000000000000000000000000000000000000000 910e46f86ab6e2fe34e227a80f83bbaca2b93e66 Balaji <balaji@fedora.(none)> 1766258537 -0500	clone: from github.com:BalajiLeninrajan/niri-dotfiles.git
+910e46f86ab6e2fe34e227a80f83bbaca2b93e66 910e46f86ab6e2fe34e227a80f83bbaca2b93e66 git stash <git@stash> 1766261376 -0500	reset: moving to HEAD
+910e46f86ab6e2fe34e227a80f83bbaca2b93e66 7537f59b0c1d4b43a17476dd74b26683e5ba9d88 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766277532 -0500	commit: added bind to search button for launcher
+7537f59b0c1d4b43a17476dd74b26683e5ba9d88 54e72e8f1304a72d2db4c07b527eaa4cfd448431 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766338546 -0500	commit: making animations faster
+54e72e8f1304a72d2db4c07b527eaa4cfd448431 54e72e8f1304a72d2db4c07b527eaa4cfd448431 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766341918 -0500	reset: moving to HEAD
+54e72e8f1304a72d2db4c07b527eaa4cfd448431 97ee368414e58550e743c2c3a741159a8f7da065 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766349615 -0500	commit: dwt
+97ee368414e58550e743c2c3a741159a8f7da065 644f6a72722153f0b1e4c3e550053c0e6e532138 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766507940 -0500	commit (amend): dwt
+644f6a72722153f0b1e4c3e550053c0e6e532138 d4b760dbdf61281dbf5d136a00fe1c4724d53707 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766507986 -0500	commit: mpris and refactor
+d4b760dbdf61281dbf5d136a00fe1c4724d53707 e3e9b0102345c2d81183f1f29a5ab5f32d7dbd5f BalajiLeninrajan <bleninra@uwaterloo.ca> 1766613992 -0500	commit: make increments more granular
+e3e9b0102345c2d81183f1f29a5ab5f32d7dbd5f e3e9b0102345c2d81183f1f29a5ab5f32d7dbd5f BalajiLeninrajan <bleninra@uwaterloo.ca> 1766772975 -0500	reset: moving to HEAD
+e3e9b0102345c2d81183f1f29a5ab5f32d7dbd5f e2789782cef55c94f86fa1ef642680e9439ccc7e BalajiLeninrajan <bleninra@uwaterloo.ca> 1766862650 -0500	commit: added minor desc
+e2789782cef55c94f86fa1ef642680e9439ccc7e 47d8e0b5b9bc539e79c6e9d184884ca84c200cb5 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766891973 -0500	commit: added manual kanata start
+47d8e0b5b9bc539e79c6e9d184884ca84c200cb5 1723eb8b9d7f9799135a387855bdb871edd7be1a BalajiLeninrajan <bleninra@uwaterloo.ca> 1767056230 -0500	commit: remove transparency
+1723eb8b9d7f9799135a387855bdb871edd7be1a f7d9585617dfbf4a271823ebb1d244af781af9cc BalajiLeninrajan <bleninra@uwaterloo.ca> 1767126805 -0500	commit (amend): remove transparency
+f7d9585617dfbf4a271823ebb1d244af781af9cc e473176355cca926b84918a5935ce9d037925ed9 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767126833 -0500	commit (amend): remove transparency
+e473176355cca926b84918a5935ce9d037925ed9 e473176355cca926b84918a5935ce9d037925ed9 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767128148 -0500	reset: moving to HEAD
+e473176355cca926b84918a5935ce9d037925ed9 935a265df27d85587dae1ca49e0447135698a4da BalajiLeninrajan <bleninra@uwaterloo.ca> 1767128270 -0500	commit: added kbd brightness
+935a265df27d85587dae1ca49e0447135698a4da 57780872e21167104e9697430e74b35cff22e087 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767840195 -0500	commit: enable csd
+57780872e21167104e9697430e74b35cff22e087 5687277f249b8789a1f44b8e865ed3c200eb8a40 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767885606 -0500	commit: added kanata reset
+5687277f249b8789a1f44b8e865ed3c200eb8a40 5fd30127670e5fe6b6088da19b85c0f2c595fd6e BalajiLeninrajan <bleninra@uwaterloo.ca> 1768075156 -0500	commit: Dual monitor updates
+5fd30127670e5fe6b6088da19b85c0f2c595fd6e f394bd5adb453a77341ab298c686f8ee433a4e09 BalajiLeninrajan <bleninra@uwaterloo.ca> 1768408863 -0500	commit: dms update
+f394bd5adb453a77341ab298c686f8ee433a4e09 33e3d303ea5b162b2093dc5a8f373d1c1eedb4d6 BalajiLeninrajan <bleninra@uwaterloo.ca> 1769536239 -0500	commit: displays
+33e3d303ea5b162b2093dc5a8f373d1c1eedb4d6 33e3d303ea5b162b2093dc5a8f373d1c1eedb4d6 BalajiLeninrajan <bleninra@uwaterloo.ca> 1770397837 -0500	reset: moving to HEAD
+33e3d303ea5b162b2093dc5a8f373d1c1eedb4d6 391bfadf19ef6aea348464e6df738e58438d72c9 BalajiLeninrajan <bleninra@uwaterloo.ca> 1771106647 -0500	commit: remaps for fullscreen-window
+391bfadf19ef6aea348464e6df738e58438d72c9 d4e7ea807f63de6b034aedc36070fc6fd1088835 BalajiLeninrajan <bleninra@uwaterloo.ca> 1772318182 -0500	commit: made window resizing better
+d4e7ea807f63de6b034aedc36070fc6fd1088835 625a5928afc7e8db348f9a5c9a33c2427f7d410c BalajiLeninrajan <bleninra@uwaterloo.ca> 1772504100 -0500	commit: :(
+625a5928afc7e8db348f9a5c9a33c2427f7d410c 625a5928afc7e8db348f9a5c9a33c2427f7d410c BalajiLeninrajan <bleninra@uwaterloo.ca> 1772644368 -0500	reset: moving to HEAD
+625a5928afc7e8db348f9a5c9a33c2427f7d410c 5ae2fa8e5a516ed5868bc73291f185b4d0bb7776 BalajiLeninrajan <bleninra@uwaterloo.ca> 1772729909 -0500	commit: keybind to kick the kernel
+5ae2fa8e5a516ed5868bc73291f185b4d0bb7776 545756d20b34cb804d07149628184d361aa3c14a BalajiLeninrajan <bleninra@uwaterloo.ca> 1772901129 -0500	commit: beeper
+545756d20b34cb804d07149628184d361aa3c14a 545756d20b34cb804d07149628184d361aa3c14a BalajiLeninrajan <bleninra@uwaterloo.ca> 1774473290 -0400	reset: moving to HEAD
