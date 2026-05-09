@@ -1,0 +1,10 @@
+0000000000000000000000000000000000000000 fd4cfa9f2b024cef85e27b64d3940288f8846ff4 Balaji <balaji@fedora.(none)> 1766259096 -0500	clone: from github.com:BalajiLeninrajan/ghostty-dotfile.git
+fd4cfa9f2b024cef85e27b64d3940288f8846ff4 dae1284ed0a698e50b5306eb9e73662d61f13f59 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766331403 -0500	commit: make the padding ma
+dae1284ed0a698e50b5306eb9e73662d61f13f59 59a31933f6bb2ab56ffcf88b611053ad51f73bf4 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766331444 -0500	commit (amend): make the padding match the font size
+59a31933f6bb2ab56ffcf88b611053ad51f73bf4 53a78ac826b78d8b0820cd90651fa440e392d885 BalajiLeninrajan <bleninra@uwaterloo.ca> 1766453569 -0500	commit (amend): updates
+53a78ac826b78d8b0820cd90651fa440e392d885 59d6e6c24a5940c0805fd68ec8eb8e6b07116ec5 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767056182 -0500	commit: transparent no more
+59d6e6c24a5940c0805fd68ec8eb8e6b07116ec5 59d6e6c24a5940c0805fd68ec8eb8e6b07116ec5 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767823852 -0500	reset: moving to HEAD
+59d6e6c24a5940c0805fd68ec8eb8e6b07116ec5 59d6e6c24a5940c0805fd68ec8eb8e6b07116ec5 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767823857 -0500	reset: moving to HEAD
+59d6e6c24a5940c0805fd68ec8eb8e6b07116ec5 1f4f302be49a331e61b86ae931923946c19c2ab2 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767824288 -0500	commit: font size more try hard
+1f4f302be49a331e61b86ae931923946c19c2ab2 8c8872f24f73f96706366c8f7e4b5a234c08e064 BalajiLeninrajan <bleninra@uwaterloo.ca> 1767840152 -0500	commit: simplified config
+8c8872f24f73f96706366c8f7e4b5a234c08e064 b8c9c9c052984a57688267b230bdf50d91309d43 BalajiLeninrajan <bleninra@uwaterloo.ca> 1770221121 -0500	commit (amend): simplified config

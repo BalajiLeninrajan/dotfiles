@@ -1,0 +1,15 @@
+theme=Catppuccin Mocha
+
+font-family="JetBrainsMono Nerd Font"
+font-size=9
+
+window-inherit-working-directory=true
+window-decoration = false
+gtk-tabs-location=bottom
+window-padding-y=10,0
+confirm-close-surface=false
+
+keybind = performable:ctrl+c=copy_to_clipboard
+keybind = performable:ctrl+v=paste_from_clipboard
+keybind=shift+enter=text:\x1b\r
+custom-shader = shaders/cursor_warp.glsl
