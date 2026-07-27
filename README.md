@@ -7,16 +7,16 @@ Cross-platform dotfiles managed with [chezmoi](https://www.chezmoi.io/).
 Shared between macOS and Linux:
 
 - Ghostty
+- Kanata, with platform-specific keyboard layouts
 - Neovim
 - Zathura
+- Zellij and the Claude Zellij integration
 - Zsh
 - Vesktop/Vencord preferences
 
 macOS only:
 
-- Kanata
 - Paneru
-- Zellij and the Claude Zellij integration
 
 Linux only:
 
@@ -33,7 +33,9 @@ chezmoi init BalajiLeninrajan/dotfiles
 chezmoi apply
 ```
 
-The Zellij installer initializes the pinned `vendor/claude-zellij` submodule, builds the custom bridge and status plugin with the repository's pinned Rust toolchain, and downloads third-party plugins with pinned SHA-256 checksums. Rustup/Cargo and curl are required on macOS.
+The Zellij installer runs on macOS and Linux. It initializes the pinned `vendor/claude-zellij` submodule, builds the custom bridge and status plugin with the repository's pinned Rust toolchain, and downloads third-party plugins with pinned SHA-256 checksums. Rustup/Cargo and curl are required.
+
+Kanata renders the active local Apple keyboard layout on macOS and the final pre-macOS layout from `kanata-dotfiles` commit `737ae339479de91772b0414ab40d5c411e7db4fa` on Linux.
 
 The token-bearing Claude Zellij LaunchAgent and Claude Code hook settings remain machine-local and are not managed by this repository.
 

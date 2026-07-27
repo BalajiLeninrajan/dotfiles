@@ -11,8 +11,6 @@ vendor
 {{ if eq .chezmoi.os "darwin" }}
 .config/vesktop
 {{ else }}
-.config/kanata
-.config/zellij
 .paneru.toml
 Library/Application Support/vesktop
 {{ end }}

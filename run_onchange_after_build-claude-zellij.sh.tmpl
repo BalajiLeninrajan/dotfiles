@@ -1,8 +1,8 @@
-{{ if eq .chezmoi.os "darwin" -}}
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
 #!/bin/sh
 set -eu
 
-# Submodule pin: c10b342246a351bec1d0c75fb92909ebbd2b82d3
+# Submodule pin: 5aef4d340710b1f121b0a052241800cc89ed98e4
 source_dir="{{ .chezmoi.sourceDir }}"
 project="$source_dir/vendor/claude-zellij"
 destination="$HOME/.config/zellij"

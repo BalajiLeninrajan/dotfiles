@@ -1,9 +1,20 @@
-{{ if eq .chezmoi.os "darwin" -}}
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
 #!/bin/sh
 set -eu
 
 destination="$HOME/.config/zellij/plugins"
 mkdir -p "$destination"
+
+checksum() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        sha256sum "$1" | cut -d ' ' -f 1
+    elif command -v shasum >/dev/null 2>&1; then
+        shasum -a 256 "$1" | cut -d ' ' -f 1
+    else
+        printf '%s\n' 'sha256sum or shasum is required to verify Zellij plugins' >&2
+        return 1
+    fi
+}
 
 download() {
     name="$1"
@@ -11,7 +22,7 @@ download() {
     expected="$3"
     target="$destination/$name"
 
-    if [ -f "$target" ] && [ "$(shasum -a 256 "$target" | cut -d ' ' -f 1)" = "$expected" ]; then
+    if [ -f "$target" ] && [ "$(checksum "$target")" = "$expected" ]; then
         return
     fi
 
@@ -21,7 +32,7 @@ download() {
         return 1
     fi
 
-    actual=$(shasum -a 256 "$temporary" | cut -d ' ' -f 1)
+    actual=$(checksum "$temporary")
     if [ "$actual" != "$expected" ]; then
         rm -f "$temporary"
         printf 'checksum mismatch for %s\n' "$name" >&2
