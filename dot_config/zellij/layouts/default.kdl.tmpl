@@ -1,0 +1,9 @@
+layout {
+    default_tab_template {
+        children
+        pane size=1 borderless=true {
+            plugin location="file:{{ .chezmoi.homeDir }}/.config/zellij/plugins/claude-zellij-status-v0.1.4.wasm"
+        }
+    }
+    tab
+}

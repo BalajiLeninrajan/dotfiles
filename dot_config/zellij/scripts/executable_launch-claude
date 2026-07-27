@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    command_name="ccx"
+else
+    command_name="claudex"
+fi
+
+if [[ "${1:-}" == "--print-command" ]]; then
+    print -r -- "$command_name"
+    exit 0
+fi
+
+exec zsh -lic "$command_name"

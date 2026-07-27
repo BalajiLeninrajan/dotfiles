@@ -1,0 +1,3 @@
+[submodule "vendor/claude-zellij"]
+	path = vendor/claude-zellij
+	url = https://github.com/BalajiLeninrajan/claude-zellij.git

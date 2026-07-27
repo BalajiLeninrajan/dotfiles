@@ -1,0 +1,31 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+set -eu
+
+# Submodule pin: c10b342246a351bec1d0c75fb92909ebbd2b82d3
+source_dir="{{ .chezmoi.sourceDir }}"
+project="$source_dir/vendor/claude-zellij"
+destination="$HOME/.config/zellij"
+
+if [ ! -f "$project/Cargo.toml" ]; then
+    git -C "$source_dir" submodule update --init --recursive -- vendor/claude-zellij
+fi
+
+if ! command -v cargo >/dev/null 2>&1; then
+    printf '%s\n' 'cargo is required to build claude-zellij' >&2
+    exit 1
+fi
+
+(
+    cd "$project"
+    cargo build --locked --release -p claude-zellij-bridge
+    cargo build --locked --release --target wasm32-wasip1 -p claude-zellij-status
+)
+
+mkdir -p "$destination/scripts" "$destination/plugins"
+install -m 0755 "$project/target/release/claude-zellij-bridge" "$destination/scripts/claude-zellij-bridge"
+install -m 0644 "$project/target/wasm32-wasip1/release/claude-zellij-status.wasm" "$destination/plugins/claude-zellij-status-v0.1.4.wasm"
+{{ else -}}
+#!/bin/sh
+exit 0
+{{ end -}}

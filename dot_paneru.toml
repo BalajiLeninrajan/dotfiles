@@ -1,0 +1,95 @@
+# Paneru config inspired by the Niri bindings in ~/.config/niri/config.kdl.
+# Paneru is intentionally smaller than Niri: app launchers, screenshots,
+# media keys, numbered workspaces, and close-window are left to macOS,
+# Raycast/Shortcuts, skhd, Hammerspoon, or app-native shortcuts.
+
+[options]
+focus_follows_mouse = false
+mouse_follows_focus = false
+
+# Match your Niri preset-column-widths.
+preset_column_widths = [0.33333, 0.5, 0.66667, 0.95]
+
+# Paneru's animation speed is pixels/second; lower feels more animated.
+animation_speed = 60
+auto_center = false
+
+[bindings]
+# === Focus Navigation ===
+# Niri: Mod+Left/Right/Up/Down and Mod+H/J/K/L
+window_focus_west = ["alt - h", "cmd + alt - h"]
+window_focus_east = ["alt - l"]
+window_focus_north = ["alt - k"]
+window_focus_south = ["alt - j"]
+
+# === Window Movement ===
+# Niri: Mod+Shift+Left/Right/Up/Down and Mod+Shift+H/J/K/L
+window_swap_west = ["alt + shift - h"]
+window_swap_east = ["alt + shift - l"]
+
+# === Window Stacks ===
+window_stack = "alt - ,"
+window_unstack = "alt - ."
+
+# === Column Navigation ===
+# Niri: Mod+Home / Mod+End
+window_focus_first = "cmd - home"
+window_focus_last = "cmd - end"
+
+# Niri: Mod+Ctrl+Home / Mod+Ctrl+End
+window_swap_first = "cmd + ctrl - home"
+window_swap_last = "cmd + ctrl - end"
+
+# === Sizing & Layout ===
+# Niri: Mod+R, Mod+Minus, Mod+Equal, Mod+C, Mod+Ctrl+F, Mod+Space
+window_resize = "alt - r"
+# window_shrink = "cmd - minus"
+# window_grow = "cmd - equal"
+window_center = "alt - c"
+window_fullwidth = "alt + ctrl - f"
+window_manage = "alt - space"
+
+# === Monitor Navigation ===
+# Paneru only exposes "next display", so these emulate monitor cycling.
+# Niri: Mod+Ctrl+Right / Mod+Ctrl+L
+mouse_nextdisplay = ["cmd + alt - i", "cmd + alt - o"]
+
+# Niri: Mod+Shift+Ctrl+Right / Mod+Shift+Ctrl+L
+window_nextdisplay = ["cmd + alt + shift - i", "cmd + alt + shift - o"]
+
+# === Virtual Workspaces ===
+# Paneru virtual rows are the closest equivalent to your Niri workspace binds.
+# Niri: Mod+I/O and Mod+Page_Down/Page_Up
+window_virtual_south = ["alt - i", "cmd - pagedown"]
+window_virtual_north = ["alt - o", "cmd - pageup"]
+
+# Niri: Mod+Shift+I/O
+window_virtualmove_south = ["alt + shift - i", "cmd + shift - pagedown"]
+window_virtualmove_north = ["alt + shift - o", "cmd + shift - pageup"]
+
+# === Paneru ===
+# Capture macOS's Hide shortcut without performing a window action.
+printstate = "cmd - h"
+
+# Niri: Mod+Shift+E quits the compositor; keep Paneru quit harder to hit.
+quit = "cmd + shift + ctrl - e"
+
+[swipe.gesture]
+fingers_count = 3
+direction = "Natural"
+
+[swipe.scroll]
+vertical_modifier = "alt"
+
+[windows.all]
+# Matches all windows and adds a few pixels of spacing to their borders.
+title = ".*"
+horizontal_padding = 4
+vertical_padding = 2
+
+[windows.codex_voice]
+# Codex exposes its voice overlay as a small window titled "Dictation".
+# Keep it out of the tiled strip so Paneru does not slide it off-screen.
+title = "^Dictation$"
+bundle_id = "com.openai.codex"
+floating = true

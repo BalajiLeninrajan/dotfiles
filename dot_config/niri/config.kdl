@@ -34,21 +34,7 @@ input {
     trackpoint {
     }
 }
-// You can configure outputs by their name, which you can find
-// by running `niri msg outputs` while inside a niri instance.
-// The built-in laptop monitor is usually called "eDP-1".
-// Find more information on the wiki:
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
-// Laptop display (left)
-output "eDP-1" {
-    scale 1.75
-    position x=0 y=0
-}
-
-// External ASUS monitor (right, aligned ~1/4 up from laptop bottom)
-output "DP-2" {
-    position x=1463 y=-166
-}
+// DMS writes machine-specific output configuration to dms/outputs.kdl.
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Layout
@@ -133,7 +119,7 @@ spawn-at-startup "fcitx5" "-d"
 
 spawn-at-startup "flatpak" "run" "dev.vencord.Vesktop"
 spawn-at-startup "flatpak" "run" "org.mozilla.Thunderbird"
-spawn-at-startup "/home/balaji/.local/bin/Beeper-4.2.605-x86_64.AppImage"
+spawn-at-startup "sh" "-lc" "exec \"$HOME/.local/bin/Beeper-4.2.605-x86_64.AppImage\""
 
 spawn-at-startup "/usr/libexec/polkit-mate-authentication-agent-1"
 
@@ -232,7 +218,6 @@ window-rule {
     match app-id="BeeperTexts"
     exclude at-startup=false
 
-    open-on-output "eDP-1"
     default-column-width { proportion 0.90; }
 }
 
@@ -242,9 +227,6 @@ binds {
     // === System & Overview ===
     Mod+Tab repeat=false { toggle-overview; }
     Mod+Shift+Slash { show-hotkey-overlay; }
-    Mod+Ctrl+Alt+K {
-        spawn "ghostty" "-e" "zsh" "-ic" "kanata --cfg ~/.config/kanata/config.kbd";
-    }
     Mod+Alt+Ctrl+W { 
         spawn "sh" "-c" "notify-send 'WiFi Reset' 'Reloading brcmfmac...'; pkexec modprobe -r brcmfmac && pkexec modprobe brcmfmac";
     }

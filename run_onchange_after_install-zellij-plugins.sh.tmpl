@@ -1,0 +1,52 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+set -eu
+
+destination="$HOME/.config/zellij/plugins"
+mkdir -p "$destination"
+
+download() {
+    name="$1"
+    url="$2"
+    expected="$3"
+    target="$destination/$name"
+
+    if [ -f "$target" ] && [ "$(shasum -a 256 "$target" | cut -d ' ' -f 1)" = "$expected" ]; then
+        return
+    fi
+
+    temporary=$(mktemp "$destination/.${name}.XXXXXX")
+    if ! curl --fail --location --silent --show-error "$url" --output "$temporary"; then
+        rm -f "$temporary"
+        return 1
+    fi
+
+    actual=$(shasum -a 256 "$temporary" | cut -d ' ' -f 1)
+    if [ "$actual" != "$expected" ]; then
+        rm -f "$temporary"
+        printf 'checksum mismatch for %s\n' "$name" >&2
+        return 1
+    fi
+
+    chmod 0644 "$temporary"
+    mv "$temporary" "$target"
+}
+
+download \
+    zellij-palette-v0.2.2.wasm \
+    https://github.com/timonwong/zellij-palette/releases/download/v0.2.2/zellij-palette.wasm \
+    564fd98b276b2907d4e13ef52c9318741390dc8f7e5d9e4a40cf5e083a7f55f9
+
+download \
+    zjstatus-hints-v0.1.4.wasm \
+    https://github.com/b0o/zjstatus-hints/releases/download/v0.1.4/zjstatus-hints.wasm \
+    936c55e9025c0edbd43421383efc151bdfdc78e924f966bfe9e7c682bec8719d
+
+download \
+    zjstatus-v0.24.0.wasm \
+    https://github.com/dj95/zjstatus/releases/download/v0.24.0/zjstatus.wasm \
+    1ccedece1ded62cf3e209be690cdd39ca6fb9e8228ed71a951f6507f9956669b
+{{ else -}}
+#!/bin/sh
+exit 0
+{{ end -}}

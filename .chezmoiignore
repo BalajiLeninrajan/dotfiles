@@ -1,5 +1,18 @@
-{{ if eq .chezmoi.os "darwin" }}
+# Source-only dependencies and machine-local credentials.
+vendor
+.config/zsh/secrets.zsh
+
+{{ if ne .chezmoi.os "linux" }}
 .config/niri
 .config/DankMaterialShell
 .config/danksearch
+{{ end }}
+
+{{ if eq .chezmoi.os "darwin" }}
+.config/vesktop
+{{ else }}
+.config/kanata
+.config/zellij
+.paneru.toml
+Library/Application Support/vesktop
 {{ end }}

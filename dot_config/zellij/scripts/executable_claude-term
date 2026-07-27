@@ -1,0 +1,110 @@
+#!/bin/zsh
+
+set -u
+
+ZELLIJ_BIN="${CLAUDE_TERM_ZELLIJ_BIN:-$(command -v zellij 2>/dev/null || true)}"
+JQ_BIN="${CLAUDE_TERM_JQ_BIN:-$(command -v jq 2>/dev/null || true)}"
+SESSION_DIR="${CLAUDE_TERM_SESSION_DIR:-$HOME/.claude/sessions}"
+
+resolve_claude_cwd() {
+    local pane_id="$1"
+    local session_file pid session_cwd process
+
+    for session_file in "$SESSION_DIR"/*.json(N); do
+        pid=$("$JQ_BIN" -r '.pid // empty' "$session_file" 2>/dev/null)
+        session_cwd=$("$JQ_BIN" -r '.cwd // empty' "$session_file" 2>/dev/null)
+        [[ "$pid" == <-> && -d "$session_cwd" ]] || continue
+
+        process=$(/bin/ps eww -p "$pid" -o command= 2>/dev/null) || continue
+        [[ " $process " == *" ZELLIJ_SESSION_NAME=${ZELLIJ_SESSION_NAME} "* ]] || continue
+        [[ " $process " == *" ZELLIJ_PANE_ID=${pane_id} "* ]] || continue
+
+        print -r -- "$session_cwd"
+        return 0
+    done
+
+    return 1
+}
+
+if [[ "${1:-}" == "--resolve-pane" ]]; then
+    [[ "${2:-}" == <-> && -n "${ZELLIJ_SESSION_NAME:-}" ]] || exit 1
+    resolve_claude_cwd "$2"
+    exit $?
+fi
+
+fallback_cwd="$PWD"
+target_cwd=""
+
+if [[ -n "${ZELLIJ_SESSION_NAME:-}" && "${ZELLIJ_PANE_ID:-}" == <-> && -x "$ZELLIJ_BIN" && -x "$JQ_BIN" ]]; then
+    panes_json=""
+    for _ in {1..10}; do
+        panes_json=$("$ZELLIJ_BIN" action list-panes --all --json 2>/dev/null)
+        "$JQ_BIN" -e --argjson pane_id "$ZELLIJ_PANE_ID" \
+            'any(.[]; .is_plugin == false and .id == $pane_id)' \
+            <<<"$panes_json" >/dev/null 2>&1 && break
+        sleep 0.02
+    done
+
+    source_pane_id=$("$JQ_BIN" -r --argjson pane_id "$ZELLIJ_PANE_ID" '
+        ([.[] | select(.is_plugin == false and .id == $pane_id)] | first) as $pane
+        | if $pane == null then empty
+          elif $pane.is_floating then
+            ([.[]
+                | select(
+                    .is_plugin == false
+                    and .tab_id == $pane.tab_id
+                    and .id != $pane.id
+                    and .is_floating == false
+                    and .is_focused == true
+                )
+                | .id
+            ] | first) // empty
+          else
+            ([.[]
+                | select(
+                    .is_plugin == false
+                    and .tab_id == $pane.tab_id
+                    and .id != $pane.id
+                    and .pane_x == $pane.pane_x
+                    and .pane_columns == $pane.pane_columns
+                    and (.pane_y + .pane_rows) == $pane.pane_y
+                )
+                | .id
+            ] | first) // empty
+          end
+    ' <<<"$panes_json" 2>/dev/null)
+
+    if [[ "$source_pane_id" == <-> ]]; then
+        target_cwd=$(resolve_claude_cwd "$source_pane_id" 2>/dev/null || true)
+    fi
+
+    if [[ -z "$target_cwd" ]]; then
+        tab_pane_ids=("${(@f)$("$JQ_BIN" -r --argjson pane_id "$ZELLIJ_PANE_ID" '
+            ([.[] | select(.is_plugin == false and .id == $pane_id)] | first) as $pane
+            | if $pane == null then empty else
+                .[]
+                | select(.is_plugin == false and .tab_id == $pane.tab_id and .id != $pane.id)
+                | .id
+              end
+        ' <<<"$panes_json" 2>/dev/null)}")
+
+        matches=()
+        for candidate_pane_id in $tab_pane_ids; do
+            candidate_cwd=$(resolve_claude_cwd "$candidate_pane_id" 2>/dev/null || true)
+            [[ -n "$candidate_cwd" ]] && matches+=("$candidate_cwd")
+        done
+        matches=("${(@u)matches}")
+
+        (( ${#matches} == 1 )) && target_cwd="$matches[1]"
+    fi
+fi
+
+[[ -d "$target_cwd" ]] || target_cwd="$fallback_cwd"
+
+if [[ "${1:-}" == "--print-cwd" ]]; then
+    print -r -- "$target_cwd"
+    exit 0
+fi
+
+cd -- "$target_cwd" || cd -- "$fallback_cwd" || exit 1
+exec /bin/zsh -l
