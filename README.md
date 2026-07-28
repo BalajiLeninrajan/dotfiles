@@ -6,8 +6,10 @@ Cross-platform dotfiles managed with [chezmoi](https://www.chezmoi.io/).
 
 Shared between macOS and Linux:
 
+- Cava
 - Ghostty
-- Kanata, with platform-specific keyboard layouts
+- Git, with the delta theme wired in
+- Kanata
 - Neovim
 - Zathura
 - Zellij and the Claude Zellij integration
@@ -17,12 +19,8 @@ Shared between macOS and Linux:
 macOS only:
 
 - Paneru
-
-Linux only:
-
-- DankMaterialShell
-- Danksearch
-- Niri
+- SketchyBar, including the Paneru workspace plugins
+- JankyBorders
 
 Platform selection is defined in `.chezmoiignore`.
 
@@ -35,13 +33,9 @@ chezmoi apply
 
 The Zellij installer runs on macOS and Linux. It initializes the pinned `vendor/claude-zellij` submodule, builds the custom bridge and status plugin with the repository's pinned Rust toolchain, and downloads third-party plugins with pinned SHA-256 checksums. Rustup/Cargo and curl are required.
 
-Kanata renders the active local Apple keyboard layout on macOS and the final pre-macOS layout from `kanata-dotfiles` commit `737ae339479de91772b0414ab40d5c411e7db4fa` on Linux.
+Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in only two places: the macOS device filter and the Cmd+H swallow, which Linux drops so the compositor keeps Super+H.
 
 The token-bearing Claude Zellij LaunchAgent and Claude Code hook settings remain machine-local and are not managed by this repository.
-
-DankMaterialShell plugin preferences are managed, but third-party plugin implementations are not vendored. Install the corresponding plugins through DMS's plugin manager on a new Linux machine.
-
-Niri's DMS output include is intentionally an empty seed file. DMS replaces it with machine-specific monitor settings.
 
 ## Local secrets
 

@@ -2,15 +2,11 @@
 vendor
 .config/zsh/secrets.zsh
 
-{{ if ne .chezmoi.os "linux" }}
-.config/niri
-.config/DankMaterialShell
-.config/danksearch
-{{ end }}
-
 {{ if eq .chezmoi.os "darwin" }}
 .config/vesktop
 {{ else }}
 .paneru.toml
+.config/sketchybar
+.config/borders
 Library/Application Support/vesktop
 {{ end }}

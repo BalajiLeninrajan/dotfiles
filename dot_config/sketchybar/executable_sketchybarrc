@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/icons.sh"
+
+FONT="JetBrainsMono Nerd Font"
+
+sketchybar --bar \
+  height=28 \
+  position=top \
+  sticky=on \
+  padding_left=8 \
+  padding_right=8 \
+  color="$BAR" \
+  shadow=off \
+  y_offset=1 \
+  corner_radius=10 \
+  blur_radius=24
+
+sketchybar --default \
+  updates=when_shown \
+  padding_left=3 \
+  padding_right=3 \
+  icon.font="$FONT:Bold:13.0" \
+  icon.color="$TEXT" \
+  icon.padding_left=8 \
+  icon.padding_right=4 \
+  label.font="$FONT:Medium:12.0" \
+  label.color="$TEXT" \
+  label.padding_left=4 \
+  label.padding_right=8 \
+  background.color="$SURFACE0" \
+  background.corner_radius=7 \
+  background.height=26 \
+  popup.background.color="$BASE" \
+  popup.background.corner_radius=8 \
+  popup.background.border_width=1 \
+  popup.background.border_color="$SURFACE1"
+
+sketchybar --add event window_changed
+sketchybar --add event paneru_update
+
+nohup "$PLUGIN_DIR/paneru_subscribe.sh" >/dev/null 2>&1 &
+
+sketchybar --add item apple.logo left \
+  --set apple.logo \
+  icon="$ICON_APPLE" \
+  icon.font="$FONT:Bold:18.0" \
+  icon.color="$MAUVE" \
+  icon.padding_left=8 \
+  icon.padding_right=2 \
+  label.drawing=off \
+  background.drawing=off \
+  script="$PLUGIN_DIR/paneru.sh" \
+  update_freq=5 \
+  --subscribe apple.logo paneru_update
+
+sketchybar --add item windows_trigger left \
+  --set windows_trigger \
+  script="$PLUGIN_DIR/windows.sh" \
+  update_freq=2 \
+  icon.drawing=off \
+  label.drawing=off \
+  background.drawing=off \
+  padding_left=0 \
+  padding_right=0 \
+  --subscribe windows_trigger front_app_switched space_change window_changed paneru_update
+
+sketchybar --add item volume right \
+  --set volume \
+  icon="$ICON_VOLUME" \
+  icon.color="$YELLOW" \
+  script="$PLUGIN_DIR/volume.sh" \
+  --subscribe volume volume_change mouse.clicked mouse.scrolled
+
+sketchybar --add item battery right \
+  --set battery \
+  icon="$ICON_BATTERY" \
+  icon.color="$PEACH" \
+  script="$PLUGIN_DIR/battery.sh" \
+  update_freq=10 \
+  --subscribe battery power_source_change system_woke
+
+sketchybar --add item weather right \
+  --set weather \
+  icon="$ICON_WEATHER" \
+  icon.color="$SAPPHIRE" \
+  script="$PLUGIN_DIR/weather.sh" \
+  update_freq=900 \
+  --subscribe weather system_woke
+
+sketchybar --add item calendar right \
+  --set calendar \
+  icon="$ICON_CALENDAR" \
+  icon.color="$LAVENDER" \
+  script="$PLUGIN_DIR/calendar.sh" \
+  update_freq=30
+
+sketchybar --update

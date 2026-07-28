@@ -1,5 +1,151 @@
-{{ if eq .chezmoi.os "darwin" -}}
-{{ template "kanata-darwin.kbd" . -}}
-{{ else if eq .chezmoi.os "linux" -}}
-{{ template "kanata-linux.kbd" . -}}
-{{ end -}}
+(defcfg
+{{- if eq .chezmoi.os "darwin" }}
+  macos-dev-names-include (
+    "Apple Internal Keyboard / Trackpad"
+  )
+{{- end }}
+  process-unmapped-keys no
+)
+
+(defsrc
+  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+)
+
+(defvar
+  tap-time 200
+  hold-time 200
+)
+
+(defchords ui-chord 10
+  (u  ) u
+  (  i) i
+  (u i) ret
+)
+
+(defchords er-chord 10
+  (e  ) e
+  (  r) r
+  (e r) tab
+)
+
+(defchords df-chord 10
+  (d  ) (tap-hold $tap-time $hold-time d lalt)
+  (  f) (tap-hold $tap-time $hold-time f lsft)
+  (d f) esc
+)
+
+(defchords jk-chord 10
+  (j  ) (tap-hold $tap-time $hold-time j rsft)
+  (  k) (tap-hold $tap-time $hold-time k ralt)
+  (j k) bspc
+)
+
+(defchords sym-er-chord 10
+  (e  ) S-3
+  (  r) S-4
+  (e r) S--
+)
+
+(defchords sym-df-chord 10
+  (d  ) [
+  (  f) S-9
+  (d f) S-=
+)
+
+(defchords sym-ui-chord 10
+  (u  ) S-7
+  (  i) S-8
+  (u i) -
+)
+
+(defchords sym-jk-chord 10
+  (j  ) S-0
+  (  k) ]
+  (j k) =
+)
+
+(defalias
+  ;; --- Home Row Mods ---
+  a (tap-hold $tap-time $hold-time a lctl)
+  s (tap-hold $tap-time $hold-time s lmet)
+
+  d (tap-hold $tap-time $hold-time d lalt)
+  f (tap-hold $tap-time $hold-time f lsft)
+
+  er-e (chord er-chord e)
+  er-r (chord er-chord r)
+
+  df-d (chord df-chord d)
+  df-f (chord df-chord f)
+
+  ui-u (chord ui-chord u)
+  ui-i (chord ui-chord i)
+
+  jk-j (chord jk-chord j)
+  jk-k (chord jk-chord k)
+{{- if eq .chezmoi.os "darwin" }}
+  ;; Swallow Cmd+H so macOS never hides the focused window.
+  h (fork h _ (lmet rmet))
+{{- else }}
+  ;; Nothing to swallow; Super+H belongs to the compositor.
+  h h
+{{- end }}
+  l (tap-hold $tap-time $hold-time l rmet)
+  ; (tap-hold $tap-time $hold-time ; rctl)
+
+  ;; --- Symbol Chords ---
+  sym-er-e (chord sym-er-chord e)
+  sym-er-r (chord sym-er-chord r)
+  sym-df-d (chord sym-df-chord d)
+  sym-df-f (chord sym-df-chord f)
+  sym-ui-u (chord sym-ui-chord u)
+  sym-ui-i (chord sym-ui-chord i)
+  sym-jk-j (chord sym-jk-chord j)
+  sym-jk-k (chord sym-jk-chord k)
+
+  ;; --- Layers ---
+  num (tap-hold $tap-time $hold-time lmet (layer-toggle num))
+  spc (tap-hold $tap-time $hold-time spc (layer-toggle sym))
+  util (layer-toggle util)
+)
+
+(deflayer base
+  brdn brup f3   f4   f5   f6   prev pp   next mute vold volu
+  grv  XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   -    =    bspc
+  XX   q    w    @er-e @er-r t    y    @ui-u @ui-i o    p    XX   XX   \
+  XX   @a   @s   @df-d @df-f g    @h   @jk-j @jk-k @l  @;     '   XX
+  @util z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl @num lalt          @spc           ralt rmet rctl
+)
+
+(deflayer num
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    lctl lmet lalt lsft _    _    7    8    9    _    _    _    _
+  _    S-=  -    S-8  /    _    =    4    5    6    _    _    _
+  _    _    _    _    _    _    0    1    2    3    .    _
+  _    _    _              _              _    _    _
+)
+
+(deflayer sym
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    S-1  S-2  @sym-er-e @sym-er-r S-5  S-6  @sym-ui-u @sym-ui-i S-9  S-0  _    _    _
+  _    grv  \    @sym-df-d @sym-df-f S-[  S-]  @sym-jk-j @sym-jk-k '    S-'  _    _
+  _    S-grv S-\  _    _    1    0    _    _    _    S--  _
+  _    _    _              _              _    _    _
+)
+
+(deflayer util
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  _    _    _
+  _    @a   @s   @d   @f   _    left down up   right _    _    _
+  _    f11  f12  prev pp   next vold mute volu brdn brup _
+  _    _    _              _              _    _    _
+)

@@ -1,0 +1,28 @@
+# This is Git's per-user configuration file.
+[user]
+name = BalajiLeninrajan
+email = bleninra@uwaterloo.ca
+
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    dark = true      # or light = true, or omit for auto-detection
+    features = catppuccin-mocha
+
+[merge]
+    conflictStyle = zdiff3
+
+[include]
+  path = {{ .chezmoi.homeDir }}/.config/delta/catppuccin.gitconfig
+
+[push]
+	autoSetupRemote = true
+
+# Must stay last: later values win, so this overrides [user].email above.
+[includeIf "gitdir:{{ .chezmoi.homeDir }}/Finta/"]
+	path = {{ .chezmoi.homeDir }}/.config/git/finta.inc
