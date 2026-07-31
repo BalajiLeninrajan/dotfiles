@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "skylight": {
+      "command": "gem",
+      "args": [
+        "exec",
+        "skylight-mcp",
+        "--token",
+        {{ .skylight_mcp_token | quote }}
+      ]
+    },
+    "render": {
+      "url": "https://mcp.render.com/mcp",
+      "headers": {
+        "Authorization": "Bearer {{ .render_mcp_token }}"
+      }
+    },
+    "appsignal": {
+      "url": "https://appsignal.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer {{ .appsignal_mcp_token }}"
+      }
+    }
+  }
+}

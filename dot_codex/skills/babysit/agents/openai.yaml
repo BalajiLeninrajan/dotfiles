@@ -1,0 +1,4 @@
+interface:
+  display_name: "Babysit PRs"
+  short_description: "Drive relevant PRs to a mergeable state"
+  default_prompt: "Use $babysit to audit and babysit the PRs and branches relevant to this task until they are mergeable."

@@ -1,0 +1,2 @@
+prefix_rule(pattern=["git", "add"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "PARALLEL_WORKERS=1 bin/rails test packages/bookkeeping/test/services/journal_entries/rollup_refresh_service_test.rb"], decision="allow")

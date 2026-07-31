@@ -1,0 +1,12 @@
+{{- $skylight := promptStringOnce . "skylight_mcp_token" "Skylight MCP token" -}}
+{{- $respan := promptStringOnce . "respan_mcp_token" "Respan MCP token" -}}
+{{- $render := promptStringOnce . "render_mcp_token" "Render MCP token" -}}
+{{- $appsignal := promptStringOnce . "appsignal_mcp_token" "AppSignal MCP token" -}}
+{{- $finta := promptStringOnce . "finta_test_password" "Finta local test-login password" -}}
+
+[data]
+    skylight_mcp_token = {{ $skylight | quote }}
+    respan_mcp_token = {{ $respan | quote }}
+    render_mcp_token = {{ $render | quote }}
+    appsignal_mcp_token = {{ $appsignal | quote }}
+    finta_test_password = {{ $finta | quote }}

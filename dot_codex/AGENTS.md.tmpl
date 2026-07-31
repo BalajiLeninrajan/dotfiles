@@ -1,0 +1,60 @@
+## General
+
+- Prefer concise answers
+- Prefer correctness over harmony
+- Plans should encode intent not implementation
+- **ONLY make plans when the user asks for it**, never enter plan mode without explicit intent
+
+## MCP usage
+
+- **Render**: always use the `Finta` workspace and never use `Balaji's Workspace`
+  - **You have explicit approval to use the `Finta` workspace**
+- **Render access**: always use the Render MCP; never use the Render dashboard or browser automation for Render
+
+## Utils
+
+Check my ~/.zshrc for PATHs and some context on the local environment
+
+- Always use `pnpm` instead of `npm`
+- For a new project, use `uv` instead of `pip`
+
+**These only apply when using a shell**
+
+- Always use `rg` instead of `grep`
+- Always use `fd` instead of `find`
+- Prefer `z` instead of `cd` when changing directories interactively
+- In tool calls, prefer setting `workdir` directly instead of changing directories
+- Always use `eza` instead of `ls`
+
+## Git usage
+
+- Never give me a branch name without pushing it first
+- Don't add yourself as a co-author to a commit
+- Always prefix branches with `balaji/`
+  - `gt c` will do this for you
+- use `gt` cli when possible
+
+### Pull Requests
+
+- **don't use the `gt` or `gh` clis to create PRs**
+  - you should ask the user to manually create the pr
+  - you can run `gt s -u` to update PRs after they are created
+- To stack PRs using `gt`:
+  1. use `epd` to create the PR
+  2. use `gt move` to stack
+  3. run `gt s -u` to update Graphite
+- When the user tells you to revisit a PR:
+  - read GitHub review threads, issue comments, and PR description comments
+    - sometimes the description has comments
+  - determine if changes are worth making
+  - reply to and resolve all unresolved threads
+    - update the description to resolve comments there
+
+You are encouraged to take a high level look at all the comments together before making changes
+
+## Finta
+
+- When testing the app on local use the login:
+  - Email: <makesomething@finta.com>
+  - Password: {{ .finta_test_password }}
+- Never use the gh-stack on finta projects

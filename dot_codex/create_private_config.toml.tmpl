@@ -1,0 +1,58 @@
+# Seed config for a fresh machine only (chezmoi `create_`: never overwrites an
+# existing ~/.codex/config.toml). Codex mutates this file constantly (project
+# trust entries, marketplace state, desktop prefs), so it is not kept in sync —
+# only the curated parts below are seeded once.
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+personality = "pragmatic"
+service_tier = "default"
+approvals_reviewer = "guardian_subagent"
+
+[features]
+js_repl = false
+
+[features.multi_agent_v2]
+enabled = true
+max_concurrent_threads_per_session = 20
+
+[mcp_servers.skylight]
+command = "gem"
+args = ["exec", "skylight-mcp", "--token", {{ .skylight_mcp_token | quote }}]
+
+[mcp_servers.respan]
+url = "https://mcp.respan.ai/mcp"
+
+[mcp_servers.respan.http_headers]
+Authorization = "Bearer {{ .respan_mcp_token }}"
+
+[mcp_servers.render]
+url = "https://mcp.render.com/mcp"
+
+[mcp_servers.render.http_headers]
+Authorization = "Bearer {{ .render_mcp_token }}"
+
+[mcp_servers.appsignal]
+url = "https://appsignal.com/api/mcp"
+
+[mcp_servers.appsignal.http_headers]
+Authorization = "Bearer {{ .appsignal_mcp_token }}"
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+[mcp_servers.chrome-devtools]
+command = "pnpm"
+args = ["dlx", "chrome-devtools-mcp@latest", "--executablePath=/Applications/Helium.app/Contents/MacOS/Helium", "--no-usage-statistics"]
+
+[mcp_servers.workos]
+url = "https://mcp.workos.com/mcp"
+
+[mcp_servers.auth0-docs-mcp-server]
+url = "https://auth0.com/docs/mcp"
+
+[mcp_servers.auth0]
+command = "pnpm"
+args = ["dlx", "@auth0/auth0-mcp-server", "run", "--tools", "*"]
+
+[tui]
+theme = "catppuccin-mocha"
