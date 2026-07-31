@@ -2,14 +2,12 @@
 #!/bin/sh
 set -eu
 
-# Submodule pin: 5aef4d340710b1f121b0a052241800cc89ed98e4
+# Submodule pin: {{ output "git" "-C" .chezmoi.sourceDir "rev-parse" "HEAD:vendor/claude-zellij" | trim }}
 source_dir="{{ .chezmoi.sourceDir }}"
 project="$source_dir/vendor/claude-zellij"
 destination="$HOME/.config/zellij"
 
-if [ ! -f "$project/Cargo.toml" ]; then
-    git -C "$source_dir" submodule update --init --recursive -- vendor/claude-zellij
-fi
+git -C "$source_dir" submodule update --init --recursive -- vendor/claude-zellij
 
 if ! command -v cargo >/dev/null 2>&1; then
     printf '%s\n' 'cargo is required to build claude-zellij' >&2
