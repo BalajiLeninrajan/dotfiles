@@ -20,6 +20,10 @@
       "headers": {
         "Authorization": "Bearer {{ .appsignal_mcp_token }}"
       }
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
     }
   }
 }

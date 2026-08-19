@@ -50,6 +50,10 @@ if command -v zoxide >/dev/null 2>&1; then
     eval "$(zoxide init zsh)"
 fi
 
+if command -v herdr >/dev/null 2>&1; then
+    eval "$(herdr completion zsh)"
+fi
+
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -81,7 +85,8 @@ fi
 
 alias vi="nvim"
 alias code="pwd | xargs nvim"
-alias mux="zellij"
+alias mux="herdr"
+alias muxn='herdr --session "$(date +%H-%M-%S)"'
 alias grep="rg"
 alias cat="bat --theme='Catppuccin Mocha'"
 alias less="bat --theme='Catppuccin Mocha'"
