@@ -1,5 +1,5 @@
-# Source-only dependencies and machine-local credentials.
-vendor
+# Repository documentation and machine-local credentials.
+README.md
 .config/zsh/secrets.zsh
 
 {{ if eq .chezmoi.os "darwin" }}

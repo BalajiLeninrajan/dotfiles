@@ -35,20 +35,8 @@ keybinds clear-defaults=true {
         bind "L" { MoveTab "Right"; }
         bind "[" { BreakPaneLeft; SwitchToMode "normal"; }
         bind "]" { BreakPaneRight; SwitchToMode "normal"; }
-        bind "a" {
-            MessagePlugin {
-                name "claude_zellij.rename_tab.v1"
-            }
-            SwitchToMode "normal"
-        }
         bind "b" { BreakPane; SwitchToMode "normal"; }
         bind "h" { GoToPreviousTab; }
-        bind "i" {
-            MessagePlugin {
-                name "claude_zellij.rename_current_tab.v1"
-            }
-            SwitchToMode "normal"
-        }
         bind "j" { GoToNextTab; }
         bind "k" { GoToPreviousTab; }
         bind "l" { GoToNextTab; }

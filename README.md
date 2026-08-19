@@ -12,7 +12,7 @@ Shared between macOS and Linux:
 - Kanata
 - Neovim
 - Zathura
-- Zellij and the Claude Zellij integration
+- Zellij
 - Zsh
 - Vesktop/Vencord preferences
 
@@ -31,11 +31,9 @@ chezmoi init BalajiLeninrajan/dotfiles
 chezmoi apply
 ```
 
-The Zellij installer runs on macOS and Linux. It initializes the pinned `vendor/claude-zellij` submodule, builds the custom bridge and status plugin with the repository's pinned Rust toolchain, and downloads third-party plugins with pinned SHA-256 checksums. Rustup/Cargo and curl are required.
+The Zellij plugin installer runs on macOS and Linux. It downloads zjstatus, zjstatus-hints, and zellij-palette with pinned SHA-256 checksums. curl is required.
 
 Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in only two places: the macOS device filter and the Cmd+H swallow, which Linux drops so the compositor keeps Super+H.
-
-The token-bearing Claude Zellij LaunchAgent and Claude Code hook settings remain machine-local and are not managed by this repository.
 
 ## Local secrets
 
