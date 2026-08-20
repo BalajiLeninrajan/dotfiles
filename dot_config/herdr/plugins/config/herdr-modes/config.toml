@@ -1,0 +1,75 @@
+# herdr-modes keymap — the zellij-transcribed set the plugin used to ship as
+# built-in defaults, including its mixed stickiness: movement keys stay in the
+# mode, creation keys act once and fall back to normal.
+#
+# Validate with: herdr-modes check
+#
+# esc / enter / ctrl+c exit any mode and are bound automatically.
+
+[modes.pane.keys]
+h = { action = "focus_left", sticky = true }
+j = { action = "focus_down", sticky = true }
+k = { action = "focus_up", sticky = true }
+l = { action = "focus_right", sticky = true }
+p = { action = "cycle_focus", sticky = true }
+x = { action = "close_pane", sticky = true }
+d = "split_down"
+r = "split_right"
+n = "split_right"
+# `f` is zellij's fullscreen; `z` was pane frames, which herdr has no runtime
+# equivalent for, so it is free to alias zoom.
+f = "zoom"
+z = "zoom"
+c = "rename_pane"
+
+[modes.tab.keys]
+# zellij binds both axes: h/k back, j/l forward.
+h = { action = "prev_tab", sticky = true }
+k = { action = "prev_tab", sticky = true }
+j = { action = "next_tab", sticky = true }
+l = { action = "next_tab", sticky = true }
+tab = { action = "last_tab", sticky = true }
+H = { action = "move_tab_left", sticky = true }
+L = { action = "move_tab_right", sticky = true }
+x = { action = "close_tab", sticky = true }
+n = "new_tab"
+r = "rename_tab"
+b = "break_pane_new"
+"[" = "break_pane_prev"
+"]" = "break_pane_next"
+1 = "goto_tab"
+2 = "goto_tab"
+3 = "goto_tab"
+4 = "goto_tab"
+5 = "goto_tab"
+6 = "goto_tab"
+7 = "goto_tab"
+8 = "goto_tab"
+9 = "goto_tab"
+
+[modes.move.keys]
+h = { action = "swap_left", sticky = true }
+j = { action = "swap_down", sticky = true }
+k = { action = "swap_up", sticky = true }
+l = { action = "swap_right", sticky = true }
+n = { action = "swap_forward", sticky = true }
+tab = { action = "swap_forward", sticky = true }
+p = { action = "swap_backward", sticky = true }
+
+# Agent mode walks the agent panel. `a` skips every agent that is still working
+# and lands on the next one blocked on you or done with unseen work.
+[modes.agent.keys]
+k = { action = "prev_agent", sticky = true }
+j = { action = "next_agent", sticky = true }
+tab = { action = "last_agent", sticky = true }
+a = { action = "next_attention", sticky = true }
+A = { action = "prev_attention", sticky = true }
+1 = "goto_agent"
+2 = "goto_agent"
+3 = "goto_agent"
+4 = "goto_agent"
+5 = "goto_agent"
+6 = "goto_agent"
+7 = "goto_agent"
+8 = "goto_agent"
+9 = "goto_agent"

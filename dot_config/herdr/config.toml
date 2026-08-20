@@ -1,0 +1,44 @@
+onboarding = false
+
+[ui.toast]
+delivery = "terminal"
+
+[ui]
+show_agent_labels_on_pane_borders = true
+agent_panel_sort = "spaces"
+tab_bar_position = "bottom"
+accent = "#cba6f7"
+
+[keys]
+# Freed for pane mode. Tab navigation now lives inside tab mode (h/k, j/l),
+# mirroring the zellij config where it was never a top-level binding.
+previous_tab = ""
+prefix = "ctrl+f"
+split_horizontal = "prefix+d"
+new_tab = "prefix+shift+t"
+copy_mode = "prefix+c"
+
+# herdr-modes: zellij-style sticky modes.
+[[keys.command]]
+key = "prefix+p"
+type = "plugin_action"
+command = "herdr-modes.pane"
+description = "pane mode"
+
+[[keys.command]]
+key = "prefix+t"
+type = "plugin_action"
+command = "herdr-modes.tab"
+description = "tab mode"
+
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "herdr-modes.move"
+description = "move mode"
+
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "herdr-modes.agent"
+description = "agent mode"
