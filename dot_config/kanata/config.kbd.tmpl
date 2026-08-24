@@ -108,6 +108,12 @@
   sym-jk-j (chord sym-jk-chord j)
   sym-jk-k (chord sym-jk-chord k)
 
+  ;; --- Gaming ---
+  ;; util + g  -> enter game layer (plain qwerty, no HRM / chords)
+  ;; caps tap  -> esc, caps hold (500ms) -> back to base
+  game-on  (layer-switch game)
+  game-off (tap-hold $tap-time 500 esc (layer-switch base))
+
   ;; --- Layers ---
   num (tap-hold $tap-time $hold-time lmet (layer-toggle num))
   spc (tap-hold $tap-time $hold-time spc (layer-toggle sym))
@@ -146,8 +152,18 @@
   _    _    _    _    _    _    _    _    _    _     _    _
   _    _    _    _    _    _    _    _    _    _     _    _    _    _
   _    f1   f2   f3   f4   f5   f6   f7   f8   f9    f10  _    _    _
-  _    @a   @s   @d   @f   _    left down up   right _    _    _
+  _    @a   @s   @d   @f   @game-on left down up   right _    _    _
   _    f11  f12  brdn brup vold volu mute prev next  pp   _
   _    _    _              _              _    _     _
 )
 
+;; Plain keyboard for games: no home row mods, no chords, no tap-hold on space.
+;; Hold caps for 500ms to return to the base layer.
+(deflayer game
+  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  @game-off a s  d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+)
