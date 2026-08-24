@@ -13,6 +13,8 @@ accent = "#cba6f7"
 # Freed for pane mode. Tab navigation now lives inside tab mode (h/k, j/l),
 # mirroring the zellij config where it was never a top-level binding.
 previous_tab = ""
+# Freed for space mode, which supersedes the picker: it previews live.
+workspace_picker = ""
 prefix = "ctrl+f"
 split_horizontal = "prefix+d"
 new_tab = "prefix+shift+t"
@@ -42,3 +44,9 @@ key = "prefix+a"
 type = "plugin_action"
 command = "herdr-modes.agent"
 description = "agent mode"
+
+[[keys.command]]
+key = "prefix+w"
+type = "plugin_action"
+command = "herdr-modes.space"
+description = "space mode"

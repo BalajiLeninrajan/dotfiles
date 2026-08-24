@@ -73,3 +73,23 @@ A = { action = "prev_attention", sticky = true }
 7 = "goto_agent"
 8 = "goto_agent"
 9 = "goto_agent"
+
+# Space mode walks the sidebar, and each step really focuses the space, so the
+# switch you are about to make is the one on screen. `esc` cancels back to where
+# the mode opened; `enter` keeps where you landed.
+[modes.space.keys]
+k = { action = "prev_space", sticky = true }
+j = { action = "next_space", sticky = true }
+tab = { action = "last_space", sticky = true }
+a = { action = "next_space_attention", sticky = true }
+A = { action = "prev_space_attention", sticky = true }
+esc = "cancel"
+1 = "goto_space"
+2 = "goto_space"
+3 = "goto_space"
+4 = "goto_space"
+5 = "goto_space"
+6 = "goto_space"
+7 = "goto_space"
+8 = "goto_space"
+9 = "goto_space"
