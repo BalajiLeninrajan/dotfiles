@@ -15,28 +15,6 @@ js_repl = false
 enabled = true
 max_concurrent_threads_per_session = 20
 
-[mcp_servers.skylight]
-command = "gem"
-args = ["exec", "skylight-mcp", "--token", {{ .skylight_mcp_token | quote }}]
-
-[mcp_servers.respan]
-url = "https://mcp.respan.ai/mcp"
-
-[mcp_servers.respan.http_headers]
-Authorization = "Bearer {{ .respan_mcp_token }}"
-
-[mcp_servers.render]
-url = "https://mcp.render.com/mcp"
-
-[mcp_servers.render.http_headers]
-Authorization = "Bearer {{ .render_mcp_token }}"
-
-[mcp_servers.appsignal]
-url = "https://appsignal.com/api/mcp"
-
-[mcp_servers.appsignal.http_headers]
-Authorization = "Bearer {{ .appsignal_mcp_token }}"
-
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
 

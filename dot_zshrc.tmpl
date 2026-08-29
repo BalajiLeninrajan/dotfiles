@@ -9,7 +9,6 @@ export ZSH="$HOME/.oh-my-zsh"
 # Machine-local credentials are intentionally not managed by chezmoi.
 [[ -r "$HOME/.config/zsh/secrets.zsh" ]] && source "$HOME/.config/zsh/secrets.zsh"
 
-
 export EDITOR="nvim"
 
 ZSH_THEME="simple"
@@ -92,9 +91,6 @@ alias cat="bat --theme='Catppuccin Mocha'"
 alias less="bat --theme='Catppuccin Mocha'"
 alias top="btop"
 
-alias rbdev="pkill ruby; bin/dev"
-alias rssh="TERM=xterm-256color render ssh"
-
 alias rust="rustc"
 alias venv_activate="source ./venv/bin/activate"
 
@@ -105,7 +101,6 @@ alias claudex='ANTHROPIC_BASE_URL=http://127.0.0.1:8317 ANTHROPIC_AUTH_TOKEN="${
 alias ccx='claudex --worktree'
 
 alias cdc="cd ~/Documents/code"
-alias finta="cd ~/Finta/finta/"
 
 alias spotx-update="bash <(curl -sSL https://spotx-official.github.io/run.sh)"
 alias spotdl="py -m spotdl"

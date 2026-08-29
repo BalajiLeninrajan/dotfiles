@@ -22,7 +22,3 @@ email = bleninra@uwaterloo.ca
 
 [push]
 	autoSetupRemote = true
-
-# Must stay last: later values win, so this overrides [user].email above.
-[includeIf "gitdir:{{ .chezmoi.homeDir }}/Finta/"]
-	path = {{ .chezmoi.homeDir }}/.config/git/finta.inc
