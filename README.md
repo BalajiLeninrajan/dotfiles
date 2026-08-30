@@ -33,7 +33,34 @@ chezmoi apply
 
 The Zellij plugin installer runs on macOS and Linux. It downloads zjstatus, zjstatus-hints, and zellij-palette with pinned SHA-256 checksums. curl is required.
 
-Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in only two places: the macOS device filter and the Cmd+H swallow, which Linux drops so the compositor keeps Super+H.
+Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in four places:
+
+- Device filter. macOS includes `Apple Internal Keyboard / Trackpad` by name. Linux instead *excludes* `Apple Headset`, whose media buttons otherwise run through the layers. It has to be an exclude: on this hardware the keyboard and the trackpad report the same name, so an include list matches both, and an include list also replaces kanata's default keyboard-only detection rather than narrowing it (`linux-device-detect-mode keyboard-only` does not win it back). Kanata then grabs the trackpad exclusively and the pointer stops working. Excluding keeps default detection, which picks the keyboard and the touch bar function row and leaves the trackpad alone.
+- Home row mods. The ring and middle fingers swap their modifiers. macOS keeps Cmd on the ring finger (`s`/`l`) to match Apple muscle memory; Linux puts Super on the stronger middle finger (`d`/`k`), since the compositor leans on it. The `num` layer mirrors whichever mapping is active one row up, on `w`/`e`.
+- Cmd+H swallow, which Linux drops so the compositor keeps Super+H.
+- `linux-continue-if-no-devs-found`, so kanata waits rather than exits when the keyboard has not reappeared yet.
+
+### Kanata on Linux
+
+The daemon runs as a systemd **user** service, `.config/systemd/user/kanata.service`. It needs no root at runtime, given a udev rule granting the `input` group access to `/dev/uinput`:
+
+```sh
+echo 'KERNEL=="uinput", MODE="0660", GROUP="input", OPTIONS+="static_node=uinput"' \
+  | sudo tee /etc/udev/rules.d/99-kanata.rules
+sudo usermod -aG input "$USER"   # log out and back in
+systemctl --user enable --now kanata.service
+```
+
+On a T2 Mac, suspend tears down the keyboard and `apple-bce` recreates it under a new event number. Kanata releases its old devices and never picks up the new ones, staying alive but deaf, so it has to be restarted on resume. Sleep targets exist only in the system manager, so that hook cannot live in this repo's `~/.config` tree; install it from the copy kept alongside the kanata config:
+
+```sh
+sudo install -m 0644 -o root -g root \
+  ~/.config/kanata/kanata-resume.service /etc/systemd/system/kanata-resume.service
+sudo systemctl daemon-reload
+sudo systemctl enable kanata-resume.service
+```
+
+Forced exit from any layer is `lctl+spc+esc`, in `defsrc` terms, i.e. before remapping.
 
 ## Local secrets
 

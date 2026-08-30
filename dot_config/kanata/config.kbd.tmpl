@@ -1,8 +1,36 @@
+{{- /* Home row mods. macOS keeps Cmd on the ring finger to match Apple
+       muscle memory; on Linux the compositor key (Super) earns the stronger
+       middle finger instead, so ring and middle swap. */ -}}
+{{- $ring := "met" -}}
+{{- $mid := "alt" -}}
+{{- if ne .chezmoi.os "darwin" -}}
+{{- $ring = "alt" -}}
+{{- $mid = "met" -}}
+{{- end -}}
 (defcfg
 {{- if eq .chezmoi.os "darwin" }}
   macos-dev-names-include (
     "Apple Internal Keyboard / Trackpad"
   )
+{{- else }}
+  ;; T2 Mac under Linux. Unfiltered, kanata grabs "Apple Headset" and runs
+  ;; its media buttons through the layers, so name it out.
+  ;;
+  ;; This has to be an exclude. The keyboard and the trackpad report the
+  ;; SAME name, so a *-include list matches both, and an include list also
+  ;; overrides the default keyboard-only detection (linux-device-detect-mode
+  ;; does not override it back). Kanata then grabs the trackpad exclusively
+  ;; and the pointer dies. Excluding leaves default detection intact, which
+  ;; already picks the keyboard and the touch bar function row and skips the
+  ;; trackpad.
+  linux-dev-names-exclude (
+    "Apple Headset"
+  )
+  ;; Suspend tears both devices down and apple-bce recreates them under new
+  ;; event numbers, so they can be absent when kanata starts. Wait instead of
+  ;; exiting. Recovering after a resume still needs a restart; see
+  ;; kanata-resume.service.
+  linux-continue-if-no-devs-found yes
 {{- end }}
   process-unmapped-keys no
 )
@@ -34,14 +62,14 @@
 )
 
 (defchords df-chord 10
-  (d  ) (tap-hold $tap-time $hold-time d lalt)
+  (d  ) (tap-hold $tap-time $hold-time d l{{ $mid }})
   (  f) (tap-hold $tap-time $hold-time f lsft)
   (d f) esc
 )
 
 (defchords jk-chord 10
   (j  ) (tap-hold $tap-time $hold-time j rsft)
-  (  k) (tap-hold $tap-time $hold-time k ralt)
+  (  k) (tap-hold $tap-time $hold-time k r{{ $mid }})
   (j k) bspc
 )
 
@@ -72,9 +100,9 @@
 (defalias
   ;; --- Home Row Mods ---
   a (tap-hold $tap-time $hold-time a lctl)
-  s (tap-hold $tap-time $hold-time s lmet)
+  s (tap-hold $tap-time $hold-time s l{{ $ring }})
 
-  d (tap-hold $tap-time $hold-time d lalt)
+  d (tap-hold $tap-time $hold-time d l{{ $mid }})
   f (tap-hold $tap-time $hold-time f lsft)
 
   er-e (chord er-chord e)
@@ -95,7 +123,7 @@
   ;; Nothing to swallow; Super+H belongs to the compositor.
   h h
 {{- end }}
-  l (tap-hold $tap-time $hold-time l rmet)
+  l (tap-hold $tap-time $hold-time l r{{ $ring }})
   ; (tap-hold $tap-time $hold-time ; rctl)
 
   ;; --- Symbol Chords ---
@@ -132,7 +160,7 @@
 (deflayer num
   _    _    _    _    _    _    _    _    _    _    _    _
   _    _    _    _    _    _    _    _    _    _    _    _    _    _
-  _    lctl lmet lalt lsft _    _    7    8    9    _    _    _    _
+  _    lctl l{{ $ring }} l{{ $mid }} lsft _    _    7    8    9    _    _    _    _
   _    S-=  -    S-8  /    _    =    4    5    6    _    _    _
   _    _    _    _    _    _    0    1    2    3    .    _
   _    _    _              _              _    _    _
