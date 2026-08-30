@@ -6,6 +6,7 @@ README.md
 .config/vesktop
 .config/systemd
 .config/kanata/kanata-resume.service
+.config/niri
 {{ else }}
 .paneru.toml
 .config/sketchybar
