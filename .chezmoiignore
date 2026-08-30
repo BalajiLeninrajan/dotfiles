@@ -4,6 +4,8 @@ README.md
 
 {{ if eq .chezmoi.os "darwin" }}
 .config/vesktop
+.config/systemd
+.config/kanata/kanata-resume.service
 {{ else }}
 .paneru.toml
 .config/sketchybar

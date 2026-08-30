@@ -1,0 +1,13 @@
+[Unit]
+Description=Restart kanata after resume (t2 keyboard gets new event node)
+After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+
+[Service]
+Type=oneshot
+User=balaji
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+ExecStartPre=/usr/bin/sleep 3
+ExecStart=/usr/bin/systemctl --user restart kanata.service
+
+[Install]
+WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
