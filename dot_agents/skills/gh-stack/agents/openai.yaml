@@ -1,0 +1,4 @@
+interface:
+  display_name: "gh-stack"
+  short_description: "Manage stacked branches and PRs with gh stack"
+  default_prompt: "Use $gh-stack to plan, create, sync, or submit a stack of dependent pull requests."
