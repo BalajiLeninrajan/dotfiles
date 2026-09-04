@@ -53,8 +53,9 @@ Home row mods are the same on both platforms: Cmd/Super on the ring finger (`s`/
 The daemon runs as a systemd **user** service, `.config/systemd/user/kanata.service`. It needs no root at runtime, given a udev rule granting the `input` group access to `/dev/uinput`:
 
 ```sh
-echo 'KERNEL=="uinput", MODE="0660", GROUP="input", OPTIONS+="static_node=uinput"' \
-  | sudo tee /etc/udev/rules.d/99-kanata.rules
+sudo install -m 0644 -o root -g root \
+  ~/.config/kanata/99-kanata.rules /etc/udev/rules.d/99-kanata.rules
+sudo udevadm control --reload && sudo udevadm trigger --name-match=uinput
 sudo usermod -aG input "$USER"   # log out and back in
 systemctl --user enable --now kanata.service
 ```
@@ -74,7 +75,35 @@ Forced exit from any layer is `lctl+spc+esc`, in `defsrc` terms, i.e. before rem
 
 `.chezmoiignore` skips the T2 files unless `/sys/module/apple_bce` exists, which it does on any T2 Mac booting Linux since that driver carries the internal keyboard.
 
-`.config/libinput/plugins/10-t2-palm.lua` is a libinput Lua plugin niri loads at startup. It holds each new touch briefly, rejects contacts by size relative to typing context, and re-creates the edge zones libinput compiles out for Apple pads. Edit, then log out and in. The size thresholds it works alongside live in `/etc/libinput/local-overrides.quirks`, which is not tracked here.
+Root-owned files are tracked as copies under `~/.config` and installed by hand. Nothing in this repo runs `sudo` for you.
+
+#### Trackpad palm rejection
+
+`.config/libinput/plugins/10-t2-palm.lua` is a libinput Lua plugin niri loads at startup. It holds each new touch briefly, rejects contacts by size relative to typing context, and re-creates the edge zones libinput compiles out for Apple pads. Edit, then log out and in.
+
+It works alongside size thresholds in a libinput quirks override. libinput only reads quirks from `/etc/libinput`, so the tracked copy has to be installed:
+
+```sh
+sudo install -m 0644 -o root -g root \
+  ~/.config/libinput/local-overrides.quirks /etc/libinput/local-overrides.quirks
+```
+
+Check it with `libinput quirks list /dev/input/eventN` for the trackpad, then log out and in.
+
+#### Touch Bar after suspend
+
+The Touch Bar comes back from suspend on the wrong USB configuration. `.config/tiny-dfr/touchbar-force-config2` switches it back and `touchbar-resume.service` runs it on resume:
+
+```sh
+sudo install -m 0755 -o root -g root \
+  ~/.config/tiny-dfr/touchbar-force-config2 /usr/local/bin/touchbar-force-config2
+sudo install -m 0644 -o root -g root \
+  ~/.config/tiny-dfr/touchbar-resume.service /etc/systemd/system/touchbar-resume.service
+sudo systemctl daemon-reload
+sudo systemctl enable touchbar-resume.service
+```
+
+The kanata resume unit is installed the same way; see the Kanata section above.
 
 ### Niri
 

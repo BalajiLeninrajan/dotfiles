@@ -1,0 +1,28 @@
+# T2 Mac internal trackpad (hid-multitouch via apple-bce VHCI).
+#
+# Overrides [Apple Touchpads USB] from 50-system-apple.quirks, whose
+# size thresholds are scaled for bcm5974 pads and do not fit this
+# digitizer. Values below are measured on this device
+# (ABS_MT_TOUCH_MAJOR range 0..5000):
+#
+#            median   max
+#   finger      196    298
+#   thumb       922   1046
+#   palm       1774   2662
+#
+# Pressure is deliberately not used: palm pressure (median 70) overlaps
+# thumb (max 79) and finger (max 47) too heavily to discriminate.
+
+[Apple T2 Internal Trackpad]
+MatchName=*Apple Inc. Apple Internal Keyboard / Trackpad*
+MatchUdevType=touchpad
+MatchBus=usb
+
+# touch begin:end — was 150:130, which swallowed light contacts (finger p05=96)
+AttrTouchSizeRange=100:80
+
+# above thumb max (1046), below palm median (1774) — was 1600
+AttrPalmSizeThreshold=1200
+
+# above finger max (298), below thumb median (922)
+AttrThumbSizeThreshold=500
