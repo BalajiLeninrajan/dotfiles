@@ -7,6 +7,7 @@ README.md
 .config/systemd
 .config/kanata/kanata-resume.service
 .config/niri
+.config/DankMaterialShell
 {{ else }}
 .paneru.toml
 .config/sketchybar
