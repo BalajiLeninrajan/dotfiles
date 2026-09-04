@@ -270,31 +270,17 @@ recent-windows {
 // Anything listed here must NOT also appear there: niri accepts the same key in
 // two included files without complaint and picks a winner arbitrarily.
 binds {
-    // Paneru: window_stack (alt - ,). Mod+Period already expels; nothing consumed.
-    Mod+Comma { consume-window-into-column; }
-
-    // Paneru: window_manage (alt - space).
     Mod+Space { toggle-window-floating; }
     Mod+Shift+Space { switch-focus-between-floating-and-tiling; }
 
-    // Paneru: window_virtual_south/north (alt - i / alt - o), so i goes down on
-    // both machines. Mod+Tab still opens the overview, which is what Mod+O was.
     Mod+I { focus-workspace-down; }
     Mod+O { focus-workspace-up; }
-
-    // Paneru: window_virtualmove_south/north (alt + shift - i / o). Follows the
-    // direction of plain Mod+I/O above, unlike Mod+Ctrl+I/U which still carry
-    // the old i-is-up sense.
     Mod+Shift+I { move-column-to-workspace-down; }
     Mod+Shift+O { move-column-to-workspace-up; }
 
-    // Reorder the workspace itself. Ctrl is the third level of the same i/o
-    // scheme; these replace Mod+Ctrl+I/U, which duplicated the pair above
-    // while still meaning i-is-up.
     Mod+Ctrl+I { move-workspace-down; }
     Mod+Ctrl+O { move-workspace-up; }
 
-    // App launchers. Mod+T still opens the terminal too.
     Mod+Return hotkey-overlay-title="Open Terminal" { spawn "ghostty"; }
     Mod+E hotkey-overlay-title="File Manager" { spawn "nautilus" "--new-window"; }
     Mod+B hotkey-overlay-title="Browser" { spawn "flatpak" "run" "app.zen_browser.zen"; }
