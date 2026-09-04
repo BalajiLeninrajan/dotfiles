@@ -54,9 +54,8 @@ binds {
     Mod+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
     Alt+Print { screenshot-window; }
     Alt+XF86Launch1 { screenshot-window; }
-    Mod+BracketLeft { consume-or-expel-window-left; }
-    Mod+BracketRight { consume-or-expel-window-right; }
     Mod+C { center-column; }
+    Mod+Comma { consume-or-expel-window-left; }
     Mod+Ctrl+C { center-visible-columns; }
     Mod+Ctrl+End { move-column-to-last; }
     Mod+Ctrl+F { expand-column-to-available-width; }
@@ -83,7 +82,7 @@ binds {
     Mod+L { focus-column-right; }
     Mod+Left { focus-column-left; }
     Mod+Minus { set-column-width "-10%"; }
-    Mod+Period { expel-window-from-column; }
+    Mod+Period { consume-or-expel-window-right; }
     Mod+Q repeat=false { close-window; }
     Mod+R { switch-preset-column-width; }
     Mod+Right { focus-column-right; }
