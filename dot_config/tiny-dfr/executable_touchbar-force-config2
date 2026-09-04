@@ -1,0 +1,114 @@
+#!/bin/sh
+# Get the T2 Touch Bar Display (05ac:8302) onto USB configuration 2.
+#
+# Config 2 exposes what tiny-dfr needs: the appletbdrm display and the
+# hid-multitouch touchpad. Config 1 is a plain-HID fallback that only
+# hid-appletb-kbd binds -- no display, no working keys.
+#
+# 99-touchbar-tiny-dfr.rules does the switch on 'add' by writing 0 then 2.
+# That works at boot. After a resume apple-bce tears the whole VHCI bus down
+# and re-enumerates it, and the T2 rejects the very first control transfer to
+# the freshly added Touch Bar (kernel log: "bce-vhci: [00] URB failed: 3",
+# before udev even runs). bce-vhci then marks the device's endpoint-0 queue
+# as stalled and never resets it, so every later control transfer -- the
+# udev rule's SET_CONFIGURATION writes, any retry, even 'remove' -- just
+# times out after ~5s. Retrying the write alone therefore never helps.
+#
+# What does help is a USB port reset (USBDEVFS_RESET via usbreset):
+# bce_vhci_reset_device destroys the T2-side device and its endpoint queues
+# and recreates them from scratch, which clears the stall. After that the
+# 0 -> 2 write goes through. If the reset itself fails, the kernel logically
+# disconnects the port and re-enumerates it (a fresh 'add', so the udev rule
+# gets another go), and we simply wait for the device to come back.
+#
+# Never write to the device's 'remove' attribute: a removed port stays dormant
+# until the hub reports a connect change, and this virtual hub never does, so
+# the Touch Bar is gone until the next suspend cycle or a reboot.
+#
+# Every sysfs write is wrapped in a timeout: this runs on the resume path.
+
+set -u
+
+ATTEMPTS=${ATTEMPTS:-3}
+WRITE_TIMEOUT=${WRITE_TIMEOUT:-8}   # a SET_CONFIGURATION that fails blocks ~5s
+RESET_TIMEOUT=${RESET_TIMEOUT:-20}
+APPEAR_WAIT=${APPEAR_WAIT:-15}      # seconds to wait for the device to (re)appear
+SETTLE_TIMEOUT=${SETTLE_TIMEOUT:-25}
+BACKOFF=${BACKOFF:-3}
+
+log() { echo "touchbar: $*"; }
+err() { echo "touchbar: $*" >&2; }
+
+find_dev() {
+	for dev in /sys/bus/usb/devices/*; do
+		[ -r "$dev/idVendor" ] || continue
+		[ "$(cat "$dev/idVendor" 2>/dev/null)" = "05ac" ] || continue
+		[ "$(cat "$dev/idProduct" 2>/dev/null)" = "8302" ] || continue
+		echo "$dev"
+		return 0
+	done
+	return 1
+}
+
+config_of() {
+	cat "$1/bConfigurationValue" 2>/dev/null
+}
+
+# Wait for the device to exist, then let udev finish with it. The vendor rule's
+# own writes may be blocking on the stalled endpoint; settling makes sure we do
+# not race them.
+wait_for_dev() {
+	i=0
+	while ! dev=$(find_dev); do
+		i=$((i + 1))
+		[ "$i" -le "$APPEAR_WAIT" ] || return 1
+		sleep 1
+	done
+	udevadm settle --timeout="$SETTLE_TIMEOUT" 2>/dev/null
+	dev=$(find_dev) || return 1
+	echo "$dev"
+}
+
+write_attr() {
+	timeout "$WRITE_TIMEOUT" sh -c "echo '$2' >'$1'" 2>/dev/null
+}
+
+on_config2() {
+	dev=$(find_dev) || return 1
+	[ "$(config_of "$dev")" = "2" ] || return 1
+	# Keep the Touch Bar out of USB autosuspend once it is up; it does not
+	# survive being autosuspended across long sleeps.
+	write_attr "$dev/power/control" on
+	log "$(basename "$dev") on configuration 2"
+	return 0
+}
+
+dev=$(wait_for_dev) || { err "no 05ac:8302 device present after ${APPEAR_WAIT}s"; exit 1; }
+on_config2 && exit 0
+
+attempt=0
+while [ "$attempt" -lt "$ATTEMPTS" ]; do
+	attempt=$((attempt + 1))
+	name=$(basename "$dev")
+	log "$name on configuration '$(config_of "$dev")', attempt $attempt/$ATTEMPTS: resetting"
+
+	timeout "$RESET_TIMEOUT" usbreset 05ac:8302 >/dev/null 2>&1 \
+		|| log "usbreset returned $? (device may be re-enumerating)"
+
+	# A failed reset logically disconnects the port; wait for the re-add and
+	# let udev's own switch attempt on the fresh device finish first.
+	dev=$(wait_for_dev) || { err "$name vanished after reset and did not return within ${APPEAR_WAIT}s"; exit 1; }
+	on_config2 && exit 0
+
+	name=$(basename "$dev")
+	log "$name on configuration '$(config_of "$dev")', switching"
+	[ -n "$(config_of "$dev")" ] && write_attr "$dev/bConfigurationValue" 0
+	write_attr "$dev/bConfigurationValue" 2
+	on_config2 && exit 0
+
+	sleep "$BACKOFF"
+	dev=$(find_dev) || dev=$(wait_for_dev) || { err "$name disappeared; giving up"; exit 1; }
+done
+
+err "$(basename "$dev") still on configuration '$(config_of "$dev")' after $ATTEMPTS reset attempts"
+exit 1

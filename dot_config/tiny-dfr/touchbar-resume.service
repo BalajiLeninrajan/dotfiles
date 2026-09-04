@@ -1,0 +1,15 @@
+[Unit]
+Description=Force Touch Bar back onto USB configuration 2 after resume
+Documentation=file:///usr/lib/udev/rules.d/99-touchbar-tiny-dfr.rules
+After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/touchbar-force-config2
+# The script waits for the device, settles udev, and bounds every USB write.
+# Worst case is roughly three reset/switch rounds plus the waits; never let a
+# wedged control transfer stall the suspend transaction beyond this.
+TimeoutStartSec=150
+
+[Install]
+WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target

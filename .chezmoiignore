@@ -3,7 +3,7 @@ README.md
 .config/zsh/secrets.zsh
 
 {{ if eq .chezmoi.os "darwin" }}
-.config/vesktop
+.var/app/dev.vencord.Vesktop
 .config/systemd
 .config/kanata/kanata-resume.service
 .config/niri

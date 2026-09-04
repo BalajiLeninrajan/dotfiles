@@ -6,8 +6,10 @@ After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate
 Type=oneshot
 User=balaji
 Environment=XDG_RUNTIME_DIR=/run/user/1000
-ExecStartPre=/usr/bin/sleep 3
-ExecStart=/usr/bin/systemctl --user restart kanata.service
+# A single fixed sleep is not enough: the user manager can still be frozen
+# when it elapses, and the restart then fails outright (seen 2026-09-01
+# 05:13:34, exit 1). Retry instead of giving up on the first miss.
+ExecStart=/bin/sh -c 'for i in 1 2 3 4 5 6 7 8 9 10; do sleep 2; /usr/bin/systemctl --user restart kanata.service && exit 0; done; exit 1'
 
 [Install]
 WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
