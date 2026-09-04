@@ -1,12 +1,8 @@
-{{- /* Home row mods. macOS keeps Cmd on the ring finger to match Apple
-       muscle memory; on Linux the compositor key (Super) earns the stronger
-       middle finger instead, so ring and middle swap. */ -}}
+{{- /* Home row mods. Cmd/Super sits on the ring finger and Alt on the
+       middle finger on both platforms. Linux briefly swapped them to put
+       Super on the stronger finger; that was reverted in September 2026. */ -}}
 {{- $ring := "met" -}}
 {{- $mid := "alt" -}}
-{{- if ne .chezmoi.os "darwin" -}}
-{{- $ring = "alt" -}}
-{{- $mid = "met" -}}
-{{- end -}}
 (defcfg
 {{- if eq .chezmoi.os "darwin" }}
   macos-dev-names-include (
@@ -143,7 +139,7 @@
   game-off (tap-hold $tap-time 500 esc (layer-switch base))
 
   ;; --- Layers ---
-  num (tap-hold $tap-time $hold-time lmet (layer-toggle num))
+  num (tap-hold $tap-time $hold-time l{{ $mid }} (layer-toggle num))
   spc (tap-hold $tap-time $hold-time spc (layer-toggle sym))
   util (layer-toggle util)
 )

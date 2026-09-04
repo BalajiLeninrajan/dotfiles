@@ -8,9 +8,6 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    opts = {
-      -- Let Ghostty's background-opacity (0.75) and blur show through
-      transparent_background = true,
-    },
+    opts = {},
   },
 }
