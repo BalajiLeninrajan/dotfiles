@@ -26,7 +26,7 @@ Linux only:
 
 - Niri, with DankMaterialShell (DMS) and its companions: dankcal, danksearch, qt5ct/qt6ct, and the `environment.d` entry DMS needs
 - GTK 3/4 settings
-- tiny-dfr Touch Bar config and resume unit
+- T2 Macs only, gated on `/sys/module/apple_bce`: the libinput palm-rejection plugin, tiny-dfr Touch Bar config and resume unit, and the kanata resume unit
 - Claude Code, Codex, and Cursor share one `~/.agents` tree; the per-tool paths are symlinks into it
 
 Platform selection is defined in `.chezmoiignore`.
@@ -69,6 +69,12 @@ sudo systemctl enable kanata-resume.service
 ```
 
 Forced exit from any layer is `lctl+spc+esc`, in `defsrc` terms, i.e. before remapping.
+
+### T2 Macs
+
+`.chezmoiignore` skips the T2 files unless `/sys/module/apple_bce` exists, which it does on any T2 Mac booting Linux since that driver carries the internal keyboard.
+
+`.config/libinput/plugins/10-t2-palm.lua` is a libinput Lua plugin niri loads at startup. It holds each new touch briefly, rejects contacts by size relative to typing context, and re-creates the edge zones libinput compiles out for Apple pads. Edit, then log out and in. The size thresholds it works alongside live in `/etc/libinput/local-overrides.quirks`, which is not tracked here.
 
 ### Niri
 

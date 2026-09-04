@@ -5,7 +5,6 @@ README.md
 {{ if eq .chezmoi.os "darwin" }}
 .var/app/dev.vencord.Vesktop
 .config/systemd
-.config/kanata/kanata-resume.service
 .config/niri
 .config/DankMaterialShell
 .config/dankcal
@@ -18,4 +17,12 @@ README.md
 .config/sketchybar
 .config/borders
 Library/Application Support/vesktop
+{{ end }}
+
+{{/* T2 Macs only. apple_bce is the bridge driver for the keyboard, trackpad,
+     and Touch Bar on those machines, so its presence identifies them. */}}
+{{ if not (and (eq .chezmoi.os "linux") (stat "/sys/module/apple_bce")) }}
+.config/libinput
+.config/tiny-dfr
+.config/kanata/kanata-resume.service
 {{ end }}
