@@ -25,23 +25,7 @@ Check my ~/.zshrc for PATHs and some context on the local environment
 - Never give me a branch name without pushing it first
 - Don't add yourself as a co-author to a commit
 - Always prefix branches with `balaji/`
-  - `gt c` will do this for you
-- use `gt` cli when possible
 
-### Pull Requests
+## Writing
 
-- **don't use the `gt` or `gh` clis to create PRs**
-  - you should ask the user to manually create the pr
-  - you can run `gt s -u` to update PRs after they are created
-- To stack PRs using `gt`:
-  1. use `epd` to create the PR
-  2. use `gt move` to stack
-  3. run `gt s -u` to update Graphite
-- When the user tells you to revisit a PR:
-  - read GitHub review threads, issue comments, and PR description comments
-    - sometimes the description has comments
-  - determine if changes are worth making
-  - reply to and resolve all unresolved threads
-    - update the description to resolve comments there
-
-You are encouraged to take a high level look at all the comments together before making changes
+- Always apply the `unslop` skill to all prose (replies, commit messages, PR descriptions, docs). Invoke it once at the start of each session before writing anything.
