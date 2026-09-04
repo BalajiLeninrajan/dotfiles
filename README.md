@@ -22,6 +22,13 @@ macOS only:
 - SketchyBar, including the Paneru workspace plugins
 - JankyBorders
 
+Linux only:
+
+- Niri, with DankMaterialShell (DMS) and its companions: dankcal, danksearch, qt5ct/qt6ct, and the `environment.d` entry DMS needs
+- GTK 3/4 settings
+- tiny-dfr Touch Bar config and resume unit
+- Claude Code, Codex, and Cursor share one `~/.agents` tree; the per-tool paths are symlinks into it
+
 Platform selection is defined in `.chezmoiignore`.
 
 ## Bootstrap
@@ -33,12 +40,13 @@ chezmoi apply
 
 The Zellij plugin installer runs on macOS and Linux. It downloads zjstatus, zjstatus-hints, and zellij-palette with pinned SHA-256 checksums. curl is required.
 
-Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in four places:
+Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in three places:
 
 - Device filter. macOS includes `Apple Internal Keyboard / Trackpad` by name. Linux instead *excludes* `Apple Headset`, whose media buttons otherwise run through the layers. It has to be an exclude: on this hardware the keyboard and the trackpad report the same name, so an include list matches both, and an include list also replaces kanata's default keyboard-only detection rather than narrowing it (`linux-device-detect-mode keyboard-only` does not win it back). Kanata then grabs the trackpad exclusively and the pointer stops working. Excluding keeps default detection, which picks the keyboard and the touch bar function row and leaves the trackpad alone.
-- Home row mods. The ring and middle fingers swap their modifiers. macOS keeps Cmd on the ring finger (`s`/`l`) to match Apple muscle memory; Linux puts Super on the stronger middle finger (`d`/`k`), since the compositor leans on it. The `num` layer mirrors whichever mapping is active one row up, on `w`/`e`.
 - Cmd+H swallow, which Linux drops so the compositor keeps Super+H.
 - `linux-continue-if-no-devs-found`, so kanata waits rather than exits when the keyboard has not reappeared yet.
+
+Home row mods are the same on both platforms: Cmd/Super on the ring finger (`s`/`l`), Alt on the middle finger (`d`/`k`). The `num` layer mirrors that one row up, on `w`/`e`.
 
 ### Kanata on Linux
 
@@ -77,6 +85,15 @@ theme or monitor change.
 Custom binds belong in `config.kdl`, never in `dms/binds.kdl`. Niri accepts the same
 key bound in two included files without warning and picks a winner arbitrarily, so a
 key defined in one must not appear in the other.
+
+## Themes and fonts
+
+Not tracked here. Install them from upstream:
+
+- Font: [JetBrainsMono Nerd Font](https://github.com/ryanoasis/nerd-fonts) (`JetBrainsMono.zip` from the releases page, unpacked into `~/.local/share/fonts/`)
+- Icons: [Colloid icon theme](https://github.com/vinceliuice/Colloid-icon-theme), installed with `./install.sh -s catppuccin -t purple`
+- Shell theme: the DMS catppuccin theme is tracked under `.config/DankMaterialShell/themes/`
+- Delta and DMS both use Catppuccin Mocha; the delta theme file is tracked under `.config/delta/`
 
 ## Local secrets
 

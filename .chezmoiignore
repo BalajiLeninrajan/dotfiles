@@ -8,6 +8,11 @@ README.md
 .config/kanata/kanata-resume.service
 .config/niri
 .config/DankMaterialShell
+.config/dankcal
+.config/danksearch
+.config/qt5ct
+.config/qt6ct
+.config/environment.d
 {{ else }}
 .paneru.toml
 .config/sketchybar
