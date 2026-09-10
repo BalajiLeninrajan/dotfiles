@@ -1,0 +1,4 @@
+interface:
+  display_name: "catppuccin-neu"
+  short_description: "Style HTML with the catppuccin-neu design system"
+  default_prompt: "Use $catppuccin-neu to style this with the design system's recipes and utilities, and check the docs site before writing custom CSS."
