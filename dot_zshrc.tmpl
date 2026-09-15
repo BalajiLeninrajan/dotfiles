@@ -52,6 +52,10 @@ if command -v herdr >/dev/null 2>&1; then
     eval "$(herdr completion zsh)"
 fi
 
+pdf() {
+    zathura "$@" > /dev/null 2>&1 &
+}
+
 cd() {
     z "$@" && eza -l --icons --git --group-directories-first .
 }
