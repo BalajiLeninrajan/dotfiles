@@ -1,7 +1,15 @@
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$HOME/.bun/bin:$PATH"
+
 if command -v go >/dev/null 2>&1; then
     export PATH="$(go env GOPATH)/bin:$PATH"
 fi
+
+# Hadoop and Spark for CS 451
+{{ if eq .chezmoi.os "linux" -}}
+export HADOOP_HOME="/opt/hadoop-3.5.0"
+export SPARK_HOME="/opt/spark-4.2.0-bin-hadoop3"
+export PATH="$HADOOP_HOME/bin:$SPARK_HOME/bin:$PATH"
+{{ end -}}
 
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_DISABLE_COMPFIX=true
