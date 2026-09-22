@@ -24,9 +24,9 @@ ZSH_DISABLE_COMPFIX=true
 export EDITOR="nvim"
 
 {{ if $student -}}
-# linux.student.cs load-balances across nodes, so which one a shell landed
-# on matters. jreese is the stock theme closest to simple that shows it.
-ZSH_THEME="jreese"
+# linux.student.cs load-balances across nodes, so the prompt has to say
+# which one a shell landed on. daveverwer is host:dir and nothing else.
+ZSH_THEME="daveverwer"
 {{ else -}}
 ZSH_THEME="simple"
 {{ end }}
