@@ -35,7 +35,7 @@ UW student.cs login nodes, matched on a `.student.cs.uwaterloo.ca` FQDN:
 - Every desktop config is ignored, along with herdr, Zellij, Vesktop, and Cursor
 - `.bash_profile` hands interactive logins to zsh. The account's login shell is bash and chsh cannot change that against LDAP
 - `.bashrc` is cut down to a PATH export. `ssh host command` sources it non-interactively, so output or key bindings there break scp and rsync
-- The theme is `gallifrey` rather than `simple`, because it shows the hostname. The load balancer moves you between nodes, so the prompt says which one you are on
+- The theme is `jreese` rather than `simple`, because it shows `%n@%m`. The load balancer moves you between nodes, so the prompt says which one you are on
 - Hadoop, Spark, and the dnf plugin drop out of `.zshrc`, since the `/opt` paths and the package manager they assume are not there
 - The Claude Code SessionStart hook drops out of `settings.json`, because it drives the herdr status line
 
