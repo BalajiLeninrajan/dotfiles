@@ -202,6 +202,18 @@ The theme name has to match `.config/niri/dms/cursor.kdl`. DMS regenerates that 
 from `settings.json` and never touches the greeter's copy, so picking a new cursor in
 DMS settings means editing this one by hand.
 
+### Zen
+
+Linux only, and only the CSS. Zen Sync covers bookmarks, passwords, and extensions.
+Zen reads `userChrome.css` from a profile directory with a random name, so chezmoi
+tracks the files at `.var/app/app.zen_browser.zen/.zen/chrome/`, and
+`run_after_link-zen-chrome.sh` symlinks them into the profile `profiles.ini` names.
+They stay inside the app's own directory because the flatpak cannot read `~/.config`.
+A profile file that differs from the tracked one is moved to `.bak` before linking.
+
+Mods from the Zen theme store (`zen-themes.json`, `chrome/zen-themes.css`) are not
+tracked. Reinstall them from the store.
+
 ## Themes and fonts
 
 Not tracked here. Install them from upstream:

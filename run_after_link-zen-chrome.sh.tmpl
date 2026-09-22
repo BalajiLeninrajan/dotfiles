@@ -1,0 +1,44 @@
+{{- /* Zen keeps userChrome.css in a profile directory with a random name, so
+       chezmoi tracks the files at a fixed .zen/chrome and this links the
+       active profile's chrome/ to them. The flatpak sandbox cannot read
+       ~/.config, so the files stay inside the app's own directory. Runs on
+       every apply so a profile created after the first apply still gets
+       linked. */ -}}
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+set -eu
+
+zen="$HOME/.var/app/app.zen_browser.zen/.zen"
+[ -f "$zen/profiles.ini" ] || exit 0
+
+# The [Install...] section names the profile this install opens. Fall back
+# to the profile marked Default=1 when there is none.
+profile=$(awk -F= '
+    /^\[/ { install = ($0 ~ /^\[Install/); next }
+    install && $1 == "Default" { print $2; exit }
+' "$zen/profiles.ini")
+if [ -z "$profile" ]; then
+    profile=$(awk -F= '
+        /^\[/ { if (default && path != "") { print path; exit } path = ""; default = 0; next }
+        $1 == "Path" { path = $2 }
+        $1 == "Default" && $2 == "1" { default = 1 }
+        END { if (default && path != "") print path }
+    ' "$zen/profiles.ini")
+fi
+[ -n "$profile" ] && [ -d "$zen/$profile" ] || exit 0
+
+mkdir -p "$zen/$profile/chrome"
+for name in userChrome.css userContent.css zen-logo-mocha.svg; do
+    target="$zen/$profile/chrome/$name"
+    link="../../chrome/$name"
+    [ "$(readlink "$target" 2>/dev/null || true)" = "$link" ] && continue
+    # Keep a copy of anything that is not already the tracked file.
+    if [ -e "$target" ] && ! cmp -s "$target" "$zen/chrome/$name"; then
+        mv "$target" "$target.bak"
+    fi
+    ln -sfn "$link" "$target"
+done
+{{ else -}}
+#!/bin/sh
+exit 0
+{{ end -}}
