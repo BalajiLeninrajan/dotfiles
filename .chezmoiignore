@@ -38,6 +38,7 @@ Library
 .config/zellij
 {{ else if eq .chezmoi.os "darwin" }}
 .bash_profile
+.bashrc
 .var/app/dev.vencord.Vesktop
 .config/systemd
 .config/niri
@@ -49,6 +50,7 @@ Library
 .config/environment.d
 {{ else }}
 .bash_profile
+.bashrc
 .paneru.toml
 .config/sketchybar
 .config/borders

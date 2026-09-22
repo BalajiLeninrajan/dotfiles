@@ -34,6 +34,7 @@ UW student.cs login nodes, matched on a `.student.cs.uwaterloo.ca` FQDN:
 - Shell and CLI config only: zsh, Neovim, git, bat, btop, delta, eza, yazi, and the agent trees
 - Every desktop config is ignored, along with herdr, Zellij, Vesktop, and Cursor
 - `.bash_profile` hands interactive logins to zsh. The account's login shell is bash and chsh cannot change that against LDAP
+- `.bashrc` is cut down to a PATH export. `ssh host command` sources it non-interactively, so output or key bindings there break scp and rsync
 - Hadoop, Spark, and the dnf plugin drop out of `.zshrc`, since the `/opt` paths and the package manager they assume are not there
 - The Claude Code SessionStart hook drops out of `settings.json`, because it drives the herdr status line
 

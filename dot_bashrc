@@ -1,0 +1,11 @@
+# Managed by chezmoi, student.cs only.
+#
+# zsh is the interactive shell on these machines and ~/.bash_profile hands over
+# to it, so this file is left with one job: `ssh host command` runs bash
+# non-interactively but still sources ~/.bashrc, and that bash needs the same
+# PATH. Nothing else belongs here. Prompts, aliases, and key bindings go in
+# .zshrc, and anything in this file that writes to the terminal or touches the
+# line editor breaks scp and rsync.
+
+PATH="$HOME/.local/bin:$HOME/.cargo/bin:/u/cs_build/bin:$PATH"
+export PATH
