@@ -610,11 +610,14 @@
       "showOnLastDisplay": true,
       "leftWidgets": [
         "launcherButton",
-        "workspaceSwitcher",
-        "focusedWindow"
+        "workspaceSwitcher"
       ],
       "centerWidgets": [
-        "music",
+        {
+          "id": "music",
+          "enabled": true,
+          "mediaSize": 1
+        },
         {
           "id": "clock",
           "enabled": true,
