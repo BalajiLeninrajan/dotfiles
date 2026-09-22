@@ -1,0 +1,35 @@
+#!/bin/sh
+# Save and restore the wall clock across reboots.
+#
+# The T2's rtc_cmos does not keep time while the machine is off: the kernel
+# reads it back as 1970-01-01, systemd then jumps the clock to its build-time
+# epoch, and everything started before chronyd reaches a server runs several
+# months in the past. Keeping our own timestamp bounds that gap by however
+# long the machine was actually off.
+#
+# Installed to /usr/local/bin/system-clock-persist.
+
+set -eu
+
+stamp=${SYSTEM_CLOCK_STAMP:-/var/lib/system-clock/saved}
+
+case "${1-}" in
+restore)
+	[ -e "$stamp" ] || exit 0
+	saved=$(date -r "$stamp" +%s)
+	[ "$(date +%s)" -lt "$saved" ] || exit 0
+	date -u -s "@$saved" >/dev/null
+	;;
+save)
+	mkdir -p "$(dirname "$stamp")"
+	# Never move the saved timestamp backwards.
+	if [ -e "$stamp" ] && [ "$(date +%s)" -le "$(date -r "$stamp" +%s)" ]; then
+		exit 0
+	fi
+	: >"$stamp"
+	;;
+*)
+	echo "usage: ${0##*/} save|restore" >&2
+	exit 2
+	;;
+esac

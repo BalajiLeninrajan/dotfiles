@@ -1,0 +1,10 @@
+# Installed to /etc/systemd/system/system-clock-save.service.
+# Pulled by system-clock-save.timer so an unclean shutdown loses at most one
+# interval rather than the whole uptime.
+[Unit]
+Description=Save the system clock for the next boot
+After=time-sync.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/system-clock-persist save

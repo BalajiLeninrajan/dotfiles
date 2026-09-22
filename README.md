@@ -144,6 +144,30 @@ sudo systemctl enable touchbar-resume.service
 
 The kanata resume unit is installed the same way; see the Kanata section above.
 
+#### Clock after power-off
+
+`rtc_cmos` on a T2 does not keep time while the machine is off. The kernel reads it
+back as `1970-01-01`, systemd jumps the clock forward to its own build-time epoch, and
+every service that starts before chronyd reaches a server runs months in the past. The
+greeter is where this shows: it draws systemd's epoch until chronyd steps the clock,
+roughly fifteen seconds in.
+
+`.config/system-clock/system-clock-persist` saves the wall clock to
+`/var/lib/system-clock/saved` on shutdown and every five minutes, then restores it on
+the next boot. That bounds the error by however long the machine was off instead of by
+the age of the systemd build. chronyd still corrects the remainder.
+
+```sh
+sudo install -m 0755 -o root -g root \
+  ~/.config/system-clock/system-clock-persist /usr/local/bin/system-clock-persist
+sudo install -m 0644 -o root -g root \
+  ~/.config/system-clock/system-clock-restore.service \
+  ~/.config/system-clock/system-clock-save.service \
+  ~/.config/system-clock/system-clock-save.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now system-clock-restore.service system-clock-save.timer
+```
+
 ### Niri
 
 Linux only, and only partly tracked. `.config/niri/config.kdl` is hand-written and
@@ -159,6 +183,24 @@ theme or monitor change.
 Custom binds belong in `config.kdl`, never in `dms/binds.kdl`. Niri accepts the same
 key bound in two included files without warning and picks a winner arbitrarily, so a
 key defined in one must not appear in the other.
+
+### Greeter
+
+greetd runs `dms-greeter`, which starts a second niri from `/etc/greetd/niri/`. That
+config has no `cursor` block, and niri ignores the `XCURSOR_THEME` that `dms-greeter`
+exports from `settings.json`, so the greeter drew the stock X11 cursor no matter what
+DMS was set to. `.config/greetd/niri_overrides.kdl` puts the theme where niri reads it.
+`dms-greeter` includes `/etc/greetd/niri_overrides.kdl` by itself when the file exists,
+so the greetd config needs no edit.
+
+```sh
+sudo install -m 0644 -o root -g root \
+  ~/.config/greetd/niri_overrides.kdl /etc/greetd/niri_overrides.kdl
+```
+
+The theme name has to match `.config/niri/dms/cursor.kdl`. DMS regenerates that file
+from `settings.json` and never touches the greeter's copy, so picking a new cursor in
+DMS settings means editing this one by hand.
 
 ## Themes and fonts
 

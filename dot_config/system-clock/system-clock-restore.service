@@ -1,0 +1,18 @@
+# Installed to /etc/systemd/system/system-clock-restore.service.
+[Unit]
+Description=Restore the system clock from the last saved timestamp
+DefaultDependencies=no
+After=systemd-remount-fs.service
+RequiresMountsFor=/var/lib
+Before=sysinit.target time-set.target
+Conflicts=shutdown.target
+Before=shutdown.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/system-clock-persist restore
+ExecStop=/usr/local/bin/system-clock-persist save
+
+[Install]
+WantedBy=sysinit.target

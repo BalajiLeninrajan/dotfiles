@@ -1,0 +1,11 @@
+// Installed to /etc/greetd/niri_overrides.kdl.
+// dms-greeter appends an `include` for this file to the niri config it
+// generates, so anything here applies to the greeter's compositor only.
+
+// niri ignores XCURSOR_THEME from the environment, so the theme dms-greeter
+// exports from settings.json never reaches it. Set it in the config instead.
+// Keep in sync with ~/.config/niri/dms/cursor.kdl.
+cursor {
+    xcursor-theme "Bibata-Modern-Ice"
+    xcursor-size 24
+}
