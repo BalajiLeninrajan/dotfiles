@@ -72,10 +72,16 @@ pdf() {
 }
 
 {{ end -}}
-# zoxide owns cd. Without it the builtin stays in place.
+# zoxide owns cd. Without it the builtin stays in place. The hook check
+# covers shells that copy functions but not chpwd_functions, like Claude
+# Code's snapshot, where z would trip zoxide's doctor warning.
 if command -v zoxide >/dev/null 2>&1; then
     cd() {
-        z "$@" && eza -l --icons --git --group-directories-first .
+        if (( ${chpwd_functions[(Ie)__zoxide_hook]} )); then
+            z "$@" && eza -l --icons --git --group-directories-first .
+        else
+            builtin cd "$@"
+        fi
     }
 fi
 
