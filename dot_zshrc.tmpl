@@ -24,8 +24,9 @@ ZSH_DISABLE_COMPFIX=true
 export EDITOR="nvim"
 
 {{ if $student -}}
-# The prompt is set after oh-my-zsh loads, below.
-ZSH_THEME=""
+# simple, with the hostname. linux.student.cs load-balances across nodes,
+# so which one a shell landed on matters.
+ZSH_THEME="gallifrey"
 {{ else -}}
 ZSH_THEME="simple"
 {{ end }}
@@ -47,19 +48,6 @@ plugins=(
 )
 
 [[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
-
-{{ if $student -}}
-# The simple theme with the hostname in front of it. linux.student.cs
-# load-balances across nodes, so which one a shell landed on matters. The
-# rest is simple.zsh-theme verbatim, which oh-my-zsh does not load when
-# ZSH_THEME is empty.
-PROMPT='%{$fg[blue]%}%m %(!.%{$fg[red]%}.%{$fg[green]%})%~$(git_prompt_info)%{$reset_color%} '
-ZSH_THEME_GIT_PROMPT_PREFIX=" %{$fg_bold[blue]%}("
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg_bold[blue]%})"
-ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg[red]%}✗"
-ZSH_THEME_GIT_PROMPT_CLEAN=" %{$fg[green]%}✔"
-
-{{ end -}}
 
 {{ if $desktopLinux -}}
 # check the dnf plugins commands here
