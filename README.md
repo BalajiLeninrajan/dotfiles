@@ -29,6 +29,14 @@ Linux only:
 - T2 Macs only, gated on `/sys/module/apple_bce`: the libinput palm-rejection plugin, tiny-dfr Touch Bar config and resume unit, and the kanata resume unit
 - Claude Code, Codex, and Cursor share one `~/.agents` tree; the per-tool paths are symlinks into it
 
+UW student.cs login nodes, matched on a `.student.cs.uwaterloo.ca` FQDN:
+
+- Shell and CLI config only: zsh, Neovim, git, bat, btop, delta, eza, yazi, and the agent trees
+- Every desktop config is ignored, along with herdr, Zellij, Vesktop, and Cursor
+- `.bash_profile` hands interactive logins to zsh. The account's login shell is bash and chsh cannot change that against LDAP
+- Hadoop, Spark, and the dnf plugin drop out of `.zshrc`, since the `/opt` paths and the package manager they assume are not there
+- The Claude Code SessionStart hook drops out of `settings.json`, because it drives the herdr status line
+
 Platform selection is defined in `.chezmoiignore`.
 
 ## Bootstrap
@@ -37,6 +45,32 @@ Platform selection is defined in `.chezmoiignore`.
 chezmoi init BalajiLeninrajan/dotfiles
 chezmoi apply
 ```
+
+### student.cs
+
+The login nodes share one NFS home, so this is done once for all of them.
+
+```sh
+chezmoi init BalajiLeninrajan/dotfiles
+mkdir -p ~/.config/chezmoi
+printf 'persistentState = "/run/user/%s/chezmoistate.boltdb"\n' "$(id -u)" \
+    > ~/.config/chezmoi/chezmoi.toml
+chezmoi apply
+```
+
+That config file is the one manual step and stays unmanaged. chezmoi keeps its
+state in boltdb, which cannot lock across NFS: two login nodes running chezmoi
+at the same time leave the file corrupt, and every later command then fails
+with `invalid database`. Pointing it at `/run/user` keeps the state on the node
+it was written from. The state only caches script hashes and applied-entry
+hashes, so losing it at logout costs nothing.
+
+`run_onchange_after_install-student-cli.sh.tmpl` installs what the box does not
+ship: ripgrep, fd, bat, zoxide, and delta as static musl binaries under
+`~/.local/bin`, oh-my-zsh with zsh-autosuggestions and zsh-syntax-highlighting,
+and a rebuilt bat theme cache. Versions are pinned with the tarball checksum,
+same as the Zellij plugins. eza, fzf, Neovim, tmux, git, btop, go, rust, and uv
+are already on the machine.
 
 The Zellij plugin installer runs on macOS and Linux. It downloads zjstatus, zjstatus-hints, and zellij-palette with pinned SHA-256 checksums. curl is required.
 

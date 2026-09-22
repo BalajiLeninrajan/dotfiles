@@ -1,0 +1,84 @@
+{{- /* student.cs gives no root and ships none of these, so pull the static
+       musl builds into ~/.local/bin. eza, fzf, nvim, tmux, git, btop, go,
+       rust, and uv are already on the box. Versions are pinned with the
+       tarball checksum, same as the zellij plugins. */ -}}
+{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname -}}
+{{ if $student -}}
+#!/bin/sh
+set -eu
+
+bindir="$HOME/.local/bin"
+mkdir -p "$bindir"
+
+temporary=$(mktemp -d)
+trap 'rm -rf "$temporary"' EXIT
+
+install_tool() {
+    name="$1"
+    version="$2"
+    url="$3"
+    expected="$4"
+    target="$bindir/$name"
+
+    if [ -x "$target" ] && "$target" --version 2>/dev/null | grep -qF "$version"; then
+        return 0
+    fi
+
+    archive="$temporary/$name.tar.gz"
+    curl --fail --location --silent --show-error "$url" --output "$archive"
+
+    actual=$(sha256sum "$archive" | cut -d ' ' -f 1)
+    if [ "$actual" != "$expected" ]; then
+        printf 'checksum mismatch for %s\n' "$name" >&2
+        return 1
+    fi
+
+    mkdir -p "$temporary/$name"
+    tar -xzf "$archive" -C "$temporary/$name"
+    binary=$(find "$temporary/$name" -type f -name "$name" -perm -u+x | head -1)
+    if [ -z "$binary" ]; then
+        printf 'no %s binary inside %s\n' "$name" "$url" >&2
+        return 1
+    fi
+
+    install -m 0755 "$binary" "$target"
+}
+
+install_tool rg 15.2.0 \
+    https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/ripgrep-15.2.0-x86_64-unknown-linux-musl.tar.gz \
+    33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+
+install_tool fd 10.5.0 \
+    https://github.com/sharkdp/fd/releases/download/v10.5.0/fd-v10.5.0-x86_64-unknown-linux-musl.tar.gz \
+    761c72dc8e120d85b22292063be8a796e2eeb20eb3e4f38b8fa2343ccf3514a7
+
+install_tool bat 0.26.1 \
+    https://github.com/sharkdp/bat/releases/download/v0.26.1/bat-v0.26.1-x86_64-unknown-linux-musl.tar.gz \
+    0dcd8ac79732c0d5b136f11f4ee00e581440e16a44eab5b3105b611bbf2cf191
+
+install_tool zoxide 0.10.0 \
+    https://github.com/ajeetdsouza/zoxide/releases/download/v0.10.0/zoxide-0.10.0-x86_64-unknown-linux-musl.tar.gz \
+    2d93385b99f3e82cf2701609a1bffcad863fbeb75aa3fe7eb6be4d29be68b1ae
+
+install_tool delta 0.19.2 \
+    https://github.com/dandavison/delta/releases/download/0.19.2/delta-0.19.2-x86_64-unknown-linux-musl.tar.gz \
+    f1ea01ca7728ce3462debc359f39dfc7cbbc1a63224b71fefabf92042864aa1b
+
+# The .zshrc sources oh-my-zsh and names two plugins that live outside it.
+omz="$HOME/.oh-my-zsh"
+[ -d "$omz" ] || git clone --quiet --depth 1 https://github.com/ohmyzsh/ohmyzsh.git "$omz"
+for plugin in zsh-autosuggestions zsh-syntax-highlighting; do
+    destination="$omz/custom/plugins/$plugin"
+    [ -d "$destination" ] || git clone --quiet --depth 1 \
+        "https://github.com/zsh-users/$plugin.git" "$destination"
+done
+
+# bat reads themes from its own cache, not from the config directory.
+cache="$HOME/.cache/bat/themes.bin"
+if [ ! -f "$cache" ] || [ "$HOME/.config/bat/themes" -nt "$cache" ]; then
+    "$bindir/bat" cache --build >/dev/null
+fi
+{{ else -}}
+#!/bin/sh
+exit 0
+{{ end -}}

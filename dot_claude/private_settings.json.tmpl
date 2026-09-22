@@ -1,9 +1,12 @@
+{{- /* The SessionStart hook drives the herdr status line, which the
+       student.cs login nodes do not get. */ -}}
+{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname -}}
 {
   "permissions": {
     "defaultMode": "auto"
   },
   "model": "claude-fable-5-1[1m]",
-  "hooks": {
+{{ if not $student }}  "hooks": {
     "SessionStart": [
       {
         "matcher": "*",
@@ -17,7 +20,7 @@
       }
     ]
   },
-  "worktree": {
+{{ end }}  "worktree": {
     "baseRef": "fresh"
   },
   "enabledPlugins": {

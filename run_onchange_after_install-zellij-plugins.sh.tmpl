@@ -1,4 +1,7 @@
-{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+{{- /* student.cs has no zellij and a quota'd NFS home, so skip the
+       plugin downloads there. */ -}}
+{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname -}}
+{{ if and (not $student) (or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux")) -}}
 #!/bin/sh
 set -eu
 

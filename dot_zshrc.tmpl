@@ -1,13 +1,17 @@
+{{- /* student.cs login nodes: headless, shared, no root, no GUI. */ -}}
+{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname -}}
+{{- $desktopLinux := and (eq .chezmoi.os "linux") (not $student) -}}
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$HOME/.bun/bin:$PATH"
 
 if command -v go >/dev/null 2>&1; then
     export PATH="$(go env GOPATH)/bin:$PATH"
 fi
 
+{{ if $desktopLinux -}}
 # Hadoop and Spark for CS 451
-{{ if eq .chezmoi.os "linux" -}}
-export HADOOP_HOME="/opt/hadoop-3.5.0"
-export SPARK_HOME="/opt/spark-4.2.0-bin-hadoop3"
+export HADOOP_HOME="/opt/hadoop-3.4.1"
+export SPARK_HOME="/opt/spark-3.5.4-bin-hadoop3"
+export JAVA_HOME="/usr/lib/jvm/temurin-8-jdk"
 export PATH="$HADOOP_HOME/bin:$SPARK_HOME/bin:$PATH"
 {{ end -}}
 
@@ -23,7 +27,7 @@ ZSH_THEME="simple"
 
 plugins=(
     git
-{{ if eq .chezmoi.os "linux" -}}
+{{ if $desktopLinux -}}
     dnf
 {{ end -}}
     python
@@ -40,8 +44,11 @@ plugins=(
 
 [[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 
+{{ if $desktopLinux -}}
 # check the dnf plugins commands here
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/dnf
+
+{{ end -}}
 
 # Set-up FZF key bindings (CTRL R for fuzzy history finder)
 if command -v fzf >/dev/null 2>&1; then
@@ -52,13 +59,18 @@ if command -v herdr >/dev/null 2>&1; then
     eval "$(herdr completion zsh)"
 fi
 
+{{ if not $student -}}
 pdf() {
     zathura "$@" > /dev/null 2>&1 &
 }
 
-cd() {
-    z "$@" && eza -l --icons --git --group-directories-first .
-}
+{{ end -}}
+# zoxide owns cd. Without it the builtin stays in place.
+if command -v zoxide >/dev/null 2>&1; then
+    cd() {
+        z "$@" && eza -l --icons --git --group-directories-first .
+    }
+fi
 
 # Nav alias
 alias ls='eza --icons --git --group-directories-first'
@@ -69,7 +81,9 @@ alias lt='eza --tree --icons'
 
 # Set-up other aliases
 alias rmdir="rm -rf"
+{{ if not $student -}}
 alias svim="sudoedit"
+{{ end -}}
 {{ if eq .chezmoi.os "darwin" -}}
 alias copy="pbcopy"
 {{ else -}}
@@ -79,11 +93,16 @@ elif command -v xclip >/dev/null 2>&1; then
     alias copy="xclip -selection clipboard"
 fi
 {{ end -}}
+{{ if $desktopLinux -}}
+    alias open="xdg-open"
+{{ end -}}
 
 alias vi="nvim"
 alias code="pwd | xargs nvim"
+{{ if not $student -}}
 alias mux="herdr"
 alias muxn='herdr --session "$(date +%H-%M-%S)"'
+{{ end -}}
 alias grep="rg"
 alias cat="bat --theme='Catppuccin Mocha'"
 alias less="bat --theme='Catppuccin Mocha'"
@@ -92,18 +111,22 @@ alias top="btop"
 alias rust="rustc"
 alias venv_activate="source ./venv/bin/activate"
 
+{{ if not $student -}}
 # Run Claude Code's harness with Codex models through local CLIProxyAPI.
 # In /model: Opus = Sol, Sonnet = Terra, Haiku = Luna.
 # `claudex` stays in the current checkout; `ccx` adds an isolated worktree.
 alias claudex='ANTHROPIC_BASE_URL=http://127.0.0.1:8317 ANTHROPIC_AUTH_TOKEN="${CLAUDEX_AUTH_TOKEN:-}" ANTHROPIC_API_KEY= ANTHROPIC_DEFAULT_OPUS_MODEL=gpt-5.6-sol ANTHROPIC_DEFAULT_OPUS_MODEL_NAME="GPT 5.6 Sol" ANTHROPIC_DEFAULT_SONNET_MODEL=gpt-5.6-terra ANTHROPIC_DEFAULT_SONNET_MODEL_NAME="GPT 5.6 Terra" ANTHROPIC_DEFAULT_HAIKU_MODEL=gpt-5.6-luna ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME="GPT 5.6 Luna" ANTHROPIC_DEFAULT_FABLE_MODEL=gpt-5.6-sol ANTHROPIC_DEFAULT_FABLE_MODEL_NAME="GPT 5.6 Sol" CLAUDE_CODE_ALWAYS_ENABLE_EFFORT=1 CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY=3 CLAUDE_CODE_AUTO_COMPACT_WINDOW=200000 CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75 ENABLE_TOOL_SEARCH=true claude --model gpt-5.6-sol --permission-mode auto'
 alias ccx='claudex --worktree'
 
+{{ end -}}
 alias cdc="cd ~/Documents/code"
 alias cdsch="cd ~/Documents/school"
 
+{{ if not $student -}}
 alias spotx-update="bash <(curl -sSL https://spotx-official.github.io/run.sh)"
 alias spotdl="py -m spotdl"
 
+{{ end -}}
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \

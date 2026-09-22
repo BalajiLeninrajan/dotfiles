@@ -1,0 +1,22 @@
+# Managed by chezmoi, student.cs only.
+#
+# The account's login shell is bash and chsh cannot change that against the
+# LDAP directory, so hand interactive logins to zsh here instead. Non-
+# interactive sessions (scp, rsync, `ssh host cmd`) never reach this file, and
+# if the exec fails the stock bash setup below still runs.
+
+case $- in
+    *i*)
+        if [ -z "$ZSH_VERSION" ] && command -v zsh >/dev/null 2>&1; then
+            exec zsh -l
+        fi
+        ;;
+esac
+
+if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+fi
+
+[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+export PATH

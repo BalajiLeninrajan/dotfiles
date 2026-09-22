@@ -2,7 +2,42 @@
 README.md
 .config/zsh/secrets.zsh
 
-{{ if eq .chezmoi.os "darwin" }}
+{{/* The student.cs login nodes are headless, shared, and root-less: shell,
+     editor, and CLI tooling only. Every desktop config is dead weight there,
+     and the home directory is on a quota'd NFS mount shared by every node. */}}
+{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname }}
+
+{{ if $student }}
+.paneru.toml
+.config/sketchybar
+.config/borders
+Library
+.var
+.cursor
+.config/cava
+.config/dankcal
+.config/DankMaterialShell
+.config/danksearch
+.config/environment.d
+.config/ghostty
+.config/greetd
+.config/gtk-3.0
+.config/gtk-4.0
+.config/herdr
+.config/kanata
+.config/libinput
+.config/niri
+.config/qt5ct
+.config/qt6ct
+.config/system-clock
+.config/systemd
+.config/thunderbird
+.config/tiny-dfr
+.config/wireplumber
+.config/zathura
+.config/zellij
+{{ else if eq .chezmoi.os "darwin" }}
+.bash_profile
 .var/app/dev.vencord.Vesktop
 .config/systemd
 .config/niri
@@ -13,6 +48,7 @@ README.md
 .config/qt6ct
 .config/environment.d
 {{ else }}
+.bash_profile
 .paneru.toml
 .config/sketchybar
 .config/borders
