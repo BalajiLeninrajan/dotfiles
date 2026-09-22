@@ -64,6 +64,13 @@ install_tool delta 0.19.2 \
     https://github.com/dandavison/delta/releases/download/0.19.2/delta-0.19.2-x86_64-unknown-linux-musl.tar.gz \
     f1ea01ca7728ce3462debc359f39dfc7cbbc1a63224b71fefabf92042864aa1b
 
+# The box ships fzf only under ~/.fzf, which is on PATH just for the bash
+# shells that source ~/.fzf.bash. .zshrc needs it on PATH like everything else,
+# or `fzf --zsh` never runs and Ctrl-K stays unbound.
+install_tool fzf 0.74.4 \
+    https://github.com/junegunn/fzf/releases/download/v0.74.4/fzf-0.74.4-linux_amd64.tar.gz \
+    05e6813a337cc722c3ed07e54a764b75cc5d671e2e60459db0ba696ee5fa7504
+
 # The .zshrc sources oh-my-zsh and names two plugins that live outside it.
 omz="$HOME/.oh-my-zsh"
 [ -d "$omz" ] || git clone --quiet --depth 1 https://github.com/ohmyzsh/ohmyzsh.git "$omz"
