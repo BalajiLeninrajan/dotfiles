@@ -23,13 +23,8 @@ ZSH_DISABLE_COMPFIX=true
 
 export EDITOR="nvim"
 
-{{ if $student -}}
-# linux.student.cs load-balances across nodes, so the prompt has to say
-# which one a shell landed on. daveverwer is host:dir and nothing else.
-ZSH_THEME="daveverwer"
-{{ else -}}
 ZSH_THEME="simple"
-{{ end }}
+
 plugins=(
     git
 {{ if $desktopLinux -}}
@@ -48,6 +43,13 @@ plugins=(
 )
 
 [[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+
+# Say so when the shell is on the other end of an ssh connection, and say
+# which machine. student.cs load-balances, so the node changes between
+# logins. Local shells get the theme untouched.
+if [[ -n "$SSH_CONNECTION" ]]; then
+    RPROMPT='%F{8}%m%f'
+fi
 
 {{ if $desktopLinux -}}
 # check the dnf plugins commands here
