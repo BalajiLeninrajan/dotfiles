@@ -626,6 +626,7 @@
         "weather"
       ],
       "rightWidgets": [
+        "kanataLayers",
         {
           "id": "systemTray",
           "enabled": true,
