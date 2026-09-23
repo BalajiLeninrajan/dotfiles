@@ -1,5 +1,5 @@
 {{- /* student.cs login nodes: headless, shared, no root, no GUI. */ -}}
-{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname -}}
+{{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) -}}
 {{- $desktopLinux := and (eq .chezmoi.os "linux") (not $student) -}}
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$HOME/.bun/bin:$PATH"
 

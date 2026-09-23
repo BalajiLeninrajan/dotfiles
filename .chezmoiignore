@@ -5,7 +5,7 @@ README.md
 {{/* The student.cs login nodes are headless, shared, and root-less: shell,
      editor, and CLI tooling only. Every desktop config is dead weight there,
      and the home directory is on a quota'd NFS mount shared by every node. */}}
-{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname }}
+{{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) }}
 
 {{ if $student }}
 .paneru.toml

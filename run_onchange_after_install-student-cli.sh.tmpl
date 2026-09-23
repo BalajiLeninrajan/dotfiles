@@ -2,7 +2,7 @@
        musl builds into ~/.local/bin. eza, fzf, nvim, tmux, git, btop, go,
        rust, and uv are already on the box. Versions are pinned with the
        tarball checksum, same as the zellij plugins. */ -}}
-{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname -}}
+{{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) -}}
 {{ if $student -}}
 #!/bin/sh
 set -eu
@@ -44,6 +44,35 @@ install_tool() {
     install -m 0755 "$binary" "$target"
 }
 
+# Neovim ships a tree, not a lone binary, and only some of these machines carry
+# it in /usr/local. Unpack it into the shared home and link it into PATH so
+# every node gets the same version.
+install_neovim() {
+    version="$1"
+    url="$2"
+    expected="$3"
+    prefix="$HOME/.local/share/neovim-$version"
+
+    if [ ! -x "$prefix/bin/nvim" ]; then
+        archive="$temporary/nvim.tar.gz"
+        curl --fail --location --silent --show-error "$url" --output "$archive"
+
+        actual=$(sha256sum "$archive" | cut -d ' ' -f 1)
+        if [ "$actual" != "$expected" ]; then
+            printf 'checksum mismatch for neovim\n' >&2
+            return 1
+        fi
+
+        mkdir -p "$temporary/nvim"
+        tar -xzf "$archive" -C "$temporary/nvim"
+        root=$(find "$temporary/nvim" -mindepth 1 -maxdepth 1 -type d | head -1)
+        rm -rf "$prefix"
+        mv "$root" "$prefix"
+    fi
+
+    ln -sfn "$prefix/bin/nvim" "$bindir/nvim"
+}
+
 install_tool rg 15.2.0 \
     https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/ripgrep-15.2.0-x86_64-unknown-linux-musl.tar.gz \
     33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
@@ -70,6 +99,10 @@ install_tool delta 0.19.2 \
 install_tool fzf 0.74.4 \
     https://github.com/junegunn/fzf/releases/download/v0.74.4/fzf-0.74.4-linux_amd64.tar.gz \
     05e6813a337cc722c3ed07e54a764b75cc5d671e2e60459db0ba696ee5fa7504
+
+install_neovim 0.12.5 \
+    https://github.com/neovim/neovim/releases/download/v0.12.5/nvim-linux-x86_64.tar.gz \
+    bce0f56eda1f1b1db6eee8f4133d7a38813ea07933837dd1777411ca384c6875
 
 # The .zshrc sources oh-my-zsh and names two plugins that live outside it.
 omz="$HOME/.oh-my-zsh"

@@ -1,6 +1,6 @@
 {{- /* The SessionStart hook drives the herdr status line, which the
        student.cs login nodes do not get. */ -}}
-{{- $student := hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname -}}
+{{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) -}}
 {
   "permissions": {
     "defaultMode": "auto"
