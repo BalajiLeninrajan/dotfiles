@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR description"
+  short_description: "Write PR descriptions that explain why, not what"
+  default_prompt: "Use $pr-description to write the description for this PR."
