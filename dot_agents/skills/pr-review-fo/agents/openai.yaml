@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR review"
+  short_description: "Review someone else's PR without posting to GitHub"
+  default_prompt: "Use $pr-review-fo to review this PR."
