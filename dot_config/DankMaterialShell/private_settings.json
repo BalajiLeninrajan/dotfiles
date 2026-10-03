@@ -1,0 +1,248 @@
+{
+  "currentThemeName": "custom",
+  "currentThemeCategory": "registry",
+  "customThemeFile": "/home/balaji/.config/DankMaterialShell/themes/catppuccin/theme.json",
+  "registryThemeVariants": {
+    "catppuccin": {
+      "dark": {
+        "flavor": "mocha",
+        "accent": "mauve"
+      }
+    }
+  },
+  "m3ElevationEnabled": false,
+  "modalElevationEnabled": false,
+  "popoutElevationEnabled": false,
+  "barElevationEnabled": false,
+  "blurForegroundLayers": false,
+  "blurBorderEnabled": false,
+  "wallpaperBackgroundColorMode": "surface",
+  "showCpuTemp": false,
+  "showGpuTemp": false,
+  "systemTrayIconTintMode": "monochrome",
+  "waveProgressEnabled": false,
+  "audioVisualizerEnabled": false,
+  "greeterWallpaperPath": "/home/balaji/.local/share/backgrounds/purple_rain.png",
+  "greeterFontFamily": "Adwaita Sans",
+  "sortAppsAlphabetically": true,
+  "spotlightSectionViewModes": {
+    "apps": "list"
+  },
+  "niriOverviewOverlayEnabled": false,
+  "dankLauncherV2UnloadOnClose": true,
+  "launcherStyle": "spotlight",
+  "spotlightBarShowModeChips": true,
+  "useAutoLocation": true,
+  "dashTabs": [
+    {
+      "id": "overview",
+      "enabled": true
+    },
+    {
+      "id": "media",
+      "enabled": true
+    },
+    {
+      "id": "wallpaper",
+      "enabled": false
+    },
+    {
+      "id": "weather",
+      "enabled": true
+    },
+    {
+      "id": "settings",
+      "enabled": true
+    }
+  ],
+  "networkPreference": "wifi",
+  "iconThemeDark": "Colloid-Purple-Catppuccin",
+  "cursorSettings": {
+    "theme": "Bibata-Modern-Ice",
+    "size": 24,
+    "niri": {
+      "hideWhenTyping": false,
+      "hideAfterInactiveMs": 0
+    },
+    "hyprland": {
+      "hideOnKeyPress": false,
+      "hideOnTouch": false,
+      "inactiveTimeout": 0
+    },
+    "dwl": {
+      "cursorHideTimeout": 0
+    },
+    "mango": {
+      "cursorHideTimeout": 0
+    }
+  },
+  "launcherLogoMode": "os",
+  "launcherLogoCustomPath": "/home/balaji/Documents/System-Backup/ProfilePicturePixelDim.png",
+  "launcherLogoColorOverride": "primary",
+  "fontFamily": "Adwaita Sans",
+  "monoFontFamily": "JetBrainsMono Nerd Font",
+  "textRenderType": 1,
+  "useSystemSoundTheme": true,
+  "soundLogin": true,
+  "acProfileName": "2",
+  "batteryProfileName": "0",
+  "lockBeforeSuspend": true,
+  "dockSmartAutoHide": true,
+  "notificationPopupShadowEnabled": false,
+  "notificationForegroundLayers": false,
+  "osdAlwaysShowValue": true,
+  "osdMediaPlaybackEnabled": true,
+  "powerActionConfirm": false,
+  "powerActionHoldDuration": 0.25,
+  "updaterCheckOnStart": true,
+  "barConfigs": [
+    {
+      "id": "default",
+      "name": "Main Bar",
+      "enabled": true,
+      "position": 0,
+      "screenPreferences": [
+        "all"
+      ],
+      "showOnLastDisplay": true,
+      "leftWidgets": [
+        "launcherButton",
+        "workspaceSwitcher"
+      ],
+      "centerWidgets": [
+        {
+          "id": "music",
+          "enabled": true,
+          "mediaSize": 1
+        },
+        {
+          "id": "clock",
+          "enabled": true,
+          "clockCompactMode": false
+        },
+        "weather"
+      ],
+      "rightWidgets": [
+        "kanataLayers",
+        {
+          "id": "quickCapture",
+          "enabled": true
+        },
+        {
+          "id": "systemTray",
+          "enabled": true,
+          "trayUseInlineExpansion": false
+        },
+        {
+          "id": "cpuUsage",
+          "enabled": true,
+          "minimumWidth": true
+        },
+        "memUsage",
+        "notificationButton",
+        {
+          "id": "battery",
+          "enabled": true,
+          "showBatteryPercentOnlyOnBattery": false,
+          "showBatteryTime": false,
+          "batteryPillPercentSign": true
+        },
+        {
+          "id": "controlCenterButton",
+          "enabled": true,
+          "showAudioPercent": true,
+          "showIdleInhibitorIcon": false,
+          "showDoNotDisturbIcon": false
+        }
+      ],
+      "spacing": 0,
+      "innerPadding": 0,
+      "bottomGap": 0,
+      "transparency": 1,
+      "widgetTransparency": 1,
+      "squareCorners": true,
+      "noBackground": false,
+      "gothCornersEnabled": false,
+      "gothCornerRadiusOverride": false,
+      "gothCornerRadiusValue": 12,
+      "borderEnabled": false,
+      "borderColor": "surfaceText",
+      "borderOpacity": 1,
+      "borderThickness": 1,
+      "fontScale": 1,
+      "autoHide": false,
+      "autoHideDelay": 250,
+      "openOnOverview": true,
+      "visible": true,
+      "popupGapsAuto": true,
+      "popupGapsManual": 4,
+      "shadowIntensity": 0,
+      "widgetOutlineEnabled": false,
+      "shadowOpacity": 60,
+      "widgetPadding": 10,
+      "hoverPopouts": true,
+      "barInsetPadding": 5,
+      "attachToScreenEdge": false,
+      "island": false,
+      "islandReserveThickness": 24,
+      "islandCompactThickness": 24,
+      "islandOuterGap": 0,
+      "islandPalette": "default",
+      "islandAlongOffset": 0,
+      "islandTransparency": 1,
+      "islandBatteryStyle": "solid",
+      "islandSatellitesEnabled": true,
+      "islandSatelliteBackground": false,
+      "islandSatelliteGothCorners": true,
+      "islandSatellitePosition": "island",
+      "islandSatelliteGap": 12,
+      "islandInteractionMode": "hybrid",
+      "islandNotificationBadgeClearOnOpen": true,
+      "islandCornerRadius": 11,
+      "islandSatelliteSwoopRadius": 4,
+      "islandNotificationExpand": false,
+      "islandHomeCompactTight": false,
+      "islandUseOverlayLayer": false,
+      "islandFloating": false,
+      "batteryColorMode": "theme",
+      "shadowColorMode": "primary"
+    }
+  ],
+  "desktopClockCustomColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1,
+    "hsvHue": -1,
+    "hsvSaturation": 0,
+    "hsvValue": 1,
+    "hslHue": -1,
+    "hslSaturation": 0,
+    "hslLightness": 1,
+    "valid": true
+  },
+  "systemMonitorCustomColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1,
+    "hsvHue": -1,
+    "hsvSaturation": 0,
+    "hsvValue": 1,
+    "hslHue": -1,
+    "hslSaturation": 0,
+    "hslLightness": 1,
+    "valid": true
+  },
+  "builtInPluginSettings": {
+    "dms_settings_search": {
+      "trigger": "?"
+    },
+    "dms_clipboard_search": {
+      "trigger": "cb"
+    }
+  },
+  "clipboardEnterToPaste": true,
+  "frameBlurEnabled": false,
+  "configVersion": 18
+}
