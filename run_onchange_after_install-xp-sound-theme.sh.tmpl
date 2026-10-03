@@ -1,0 +1,71 @@
+{{- /* DMS plays the six events below from the gsettings sound theme when
+       useSystemSoundTheme is on. The WAVs are Microsoft's, so they're fetched
+       from archive.org instead of committed. */ -}}
+{{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) -}}
+{{ if and (not $student) (eq .chezmoi.os "linux") -}}
+#!/bin/sh
+set -eu
+
+theme="$HOME/.local/share/sounds/WindowsXP"
+destination="$theme/stereo"
+source=https://archive.org/download/windows-xp-startup_202401
+mkdir -p "$destination"
+
+cat >"$theme/index.theme" <<'EOF'
+[Sound Theme]
+Name=Windows XP
+Inherits=freedesktop
+Directories=stereo
+
+[stereo]
+OutputProfile=stereo
+EOF
+
+download() {
+    original="$1"
+    event="$2"
+    expected="$3"
+    target="$destination/$event.wav"
+
+    if [ -f "$target" ] && [ "$(sha256sum "$target" | cut -d ' ' -f 1)" = "$expected" ]; then
+        return
+    fi
+
+    temporary=$(mktemp "$destination/.${event}.XXXXXX")
+    url="$source/$(printf '%s' "$original" | sed 's/ /%20/g')"
+    if ! curl --fail --location --silent --show-error "$url" --output "$temporary"; then
+        rm -f "$temporary"
+        return 1
+    fi
+
+    actual=$(sha256sum "$temporary" | cut -d ' ' -f 1)
+    if [ "$actual" != "$expected" ]; then
+        rm -f "$temporary"
+        printf 'checksum mismatch for %s\n' "$original" >&2
+        return 1
+    fi
+
+    chmod 0644 "$temporary"
+    mv "$temporary" "$target"
+}
+
+download "Windows XP Ding.wav" audio-volume-change \
+    20fc59d9f846bc32b899880fae0878208856718b75e6158526308b900af8a9bd
+download "Windows XP Hardware Insert.wav" power-plug \
+    a3e44db9179591a705baed6daa00efb988197c0698a9747980126d5939e9d506
+download "Windows XP Hardware Remove.wav" power-unplug \
+    c4d09c6ad6a9090c4e611330a7501f7a84abc7c777c6e3d1915179f8d1ed45f3
+download "Windows XP Balloon.wav" message \
+    c9de87a87b68dd754fa29f2989c240949ad9b1f0423d019ca68afcd86e107639
+download "Windows XP Exclamation.wav" message-new-instant \
+    b57b8e8818c424452ca4fb8abb219ae01c0e31db2f955e1f85d9fcb5a0dabfbe
+download "Windows XP Startup.wav" desktop-login \
+    8f859ebb90247036ced11db854848abe1434dc3ffdfa5795f7c5f06db9a423d5
+
+if command -v gsettings >/dev/null 2>&1; then
+    gsettings set org.gnome.desktop.sound theme-name WindowsXP
+fi
+{{ else -}}
+#!/bin/sh
+exit 0
+{{ end -}}
