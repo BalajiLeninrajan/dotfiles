@@ -82,7 +82,6 @@
   "fontFamily": "Adwaita Sans",
   "monoFontFamily": "JetBrainsMono Nerd Font",
   "textRenderType": 1,
-  "useSystemSoundTheme": true,
   "soundLogin": true,
   "acProfileName": "2",
   "batteryProfileName": "0",

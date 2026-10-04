@@ -1,3 +1,6 @@
 # Removed with the Claude Zellij integration.
 .claude/skills/verify
 .config/zellij/plugins/claude-zellij-status-v0.1.4.wasm
+
+# Removed with the Windows XP sound theme.
+.local/share/sounds/WindowsXP
