@@ -1,6 +1,6 @@
-{{- /* Zen keeps userChrome.css in a profile directory with a random name, so
-       chezmoi tracks the files at a fixed .zen/chrome and this links the
-       active profile's chrome/ to them. The flatpak sandbox cannot read
+{{- /* Zen keeps userChrome.css and user.js in a profile directory with a
+       random name, so chezmoi tracks them at fixed paths under .zen and this
+       links the active profile to them. The flatpak sandbox cannot read
        ~/.config, so the files stay inside the app's own directory. Runs on
        every apply so a profile created after the first apply still gets
        linked. */ -}}
@@ -38,6 +38,15 @@ for name in userChrome.css userContent.css zen-logo-mocha.svg; do
     fi
     ln -sfn "$link" "$target"
 done
+
+# user.js sits in the profile root, beside prefs.js.
+target="$zen/$profile/user.js"
+if [ "$(readlink "$target" 2>/dev/null || true)" != "../user.js" ]; then
+    if [ -e "$target" ] && ! cmp -s "$target" "$zen/user.js"; then
+        mv "$target" "$target.bak"
+    fi
+    ln -sfn ../user.js "$target"
+fi
 {{ else -}}
 #!/bin/sh
 exit 0
