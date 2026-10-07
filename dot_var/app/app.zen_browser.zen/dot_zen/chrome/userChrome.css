@@ -55,6 +55,14 @@
     color: #cba6f7 !important;
   }
 
+  /* The <select> dropdown takes the page's color scheme, so on a light page
+     its text resolves to black on the dark background set above. Pin the text
+     and drop any page-supplied background. */
+  #ContentSelectDropdown > menupopup {
+    --panel-text-color: #cdd6f4 !important;
+    --content-select-background-image: none !important;
+  }
+
   #zenEditBookmarkPanelFaviconContainer {
     background: #11111b !important;
   }
