@@ -1,0 +1,83 @@
+{
+  "coroutine": {
+    "pre
+   fix": "coroutine",
+    "body": ["coroutine ${1:Name} {", "\t$2", "};", "", "void main(${1:Name} & ${3:c}) {", "\t$0", "}"],
+    "description": "coroutine type and its main"
+  },
+  "monitor": {
+    "prefix": "monitor",
+    "body": ["monitor ${1:Name} {", "\t$0", "};"],
+    "description": "monitor type"
+  },
+  "thread": {
+    "prefix": "thread",
+    "body": ["thread ${1:Name} {", "\t$2", "};", "", "void main(${1:Name} & ${3:t}) {", "\t$0", "}"],
+    "description": "thread type and its main"
+  },
+  "ExceptionDecl": {
+    "prefix": ["exc", "ExceptionDecl"],
+    "body": ["ExceptionDecl(${1:Name});"],
+    "description": "declare an exception (global scope only)"
+  },
+  "throw": {
+    "prefix": "throw",
+    "body": ["throw ExceptionInst(${1:Name});"],
+    "description": "termination throw"
+  },
+  "throwResume": {
+    "prefix": "throwResume",
+    "body": ["throwResume ExceptionInst(${1:Name});"],
+    "description": "resumption throw"
+  },
+  "resumeAt": {
+    "prefix": "resumeAt",
+    "body": ["${1:Name} ${2:e} = ExceptionInst(${1:Name});", "resumeAt(${3:resumer()}, ${2:e});"],
+    "description": "raise a nonlocal exception at another coroutine"
+  },
+  "try": {
+    "prefix": "try",
+    "body": ["try {", "\t$1", "} catch (${2:Name} *) {", "\t$0", "}"],
+    "description": "try / catch (handlers take a pointer)"
+  },
+  "catchResume": {
+    "prefix": "catchResume",
+    "body": ["catchResume (${1:Name} *) {", "\t$0", "}"],
+    "description": "resumption handler"
+  },
+  "forall": {
+    "prefix": "forall",
+    "body": ["forall(${1:T} &) $0"],
+    "description": "polymorphic declaration"
+  },
+  "for range": {
+    "prefix": ["fori", "forr"],
+    "body": ["for (${1:i}; ${2:n}) {", "\t$0", "}"],
+    "description": "for (i; n): 0 to n-1"
+  },
+  "for ever": {
+    "prefix": "forever",
+    "body": ["for () {", "\t$0", "}"],
+    "description": "infinite loop"
+  },
+  "choose": {
+    "prefix": "choose",
+    "body": ["choose (${1:x}) {", "  case ${2:0}:", "\t$0", "  default:", "\t;", "}"],
+    "description": "switch with an implicit break"
+  },
+  "constructor": {
+    "prefix": ["ctor", "?{}"],
+    "body": ["void ?{}(${1:Type} & ${2:this}) {", "\t$0", "}"],
+    "description": "constructor"
+  },
+  "destructor": {
+    "prefix": ["dtor", "^?{}"],
+    "body": ["void ^?{}(${1:Type} & ${2:this}) {", "\t$0", "}"],
+    "description": "destructor"
+  },
+  "sout": {
+    "prefix": "sout",
+    "body": ["sout | $0;"],
+    "description": "print a line"
+  }
+}
