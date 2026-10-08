@@ -163,6 +163,7 @@ overview {
 environment {
   XDG_CURRENT_DESKTOP "niri"
 }
+spawn-at-startup "fcitx5" "-d" "--replace"
 hotkey-overlay {
     skip-at-startup
 }

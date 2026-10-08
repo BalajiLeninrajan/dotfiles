@@ -24,6 +24,10 @@ Library
 .config/gtk-3.0
 .config/gtk-4.0
 .config/herdr
+.config/fcitx5
+.config/fontconfig
+.local/share/fcitx5
+.m17n.d
 .config/kanata
 .config/libinput
 .config/niri
@@ -49,6 +53,10 @@ Library
 .config/qt5ct
 .config/qt6ct
 .config/environment.d
+.config/fcitx5
+.config/fontconfig
+.local/share/fcitx5
+.m17n.d
 {{ else }}
 .bash_profile
 .bashrc
