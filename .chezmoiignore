@@ -39,7 +39,6 @@ Library
 .config/tiny-dfr
 .config/wireplumber
 .config/zathura
-.config/zellij
 {{ else if eq .chezmoi.os "darwin" }}
 .bash_profile
 .bashrc

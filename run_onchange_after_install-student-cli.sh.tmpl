@@ -1,7 +1,7 @@
 {{- /* student.cs gives no root and ships none of these, so pull the static
        musl builds into ~/.local/bin. eza, fzf, nvim, tmux, git, btop, go,
        rust, and uv are already on the box. Versions are pinned with the
-       tarball checksum, same as the zellij plugins. */ -}}
+       tarball checksum. */ -}}
 {{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) -}}
 {{ if $student -}}
 #!/bin/sh

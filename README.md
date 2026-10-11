@@ -9,10 +9,10 @@ Shared between macOS and Linux:
 - Cava
 - Ghostty
 - Git, with the delta theme wired in
+- Gitui, with Catppuccin Mocha and vim motions
 - Kanata
 - Neovim
 - Zathura
-- Zellij
 - Zsh
 - Vesktop/Vencord preferences
 
@@ -31,8 +31,8 @@ Linux only:
 
 UW student.cs login nodes, matched on a `.student.cs.uwaterloo.ca` FQDN:
 
-- Shell and CLI config only: zsh, Neovim, git, bat, btop, delta, eza, yazi, and the agent trees
-- Every desktop config is ignored, along with herdr, Zellij, Vesktop, and Cursor
+- Shell and CLI config only: zsh, Neovim, git, gitui, bat, btop, delta, eza, yazi, and the agent trees
+- Every desktop config is ignored, along with herdr, Vesktop, and Cursor
 - `.bash_profile` hands interactive logins to zsh. The account's login shell is bash and chsh cannot change that against LDAP
 - `.bashrc` is cut down to a PATH export. `ssh host command` sources it non-interactively, so output or key bindings there break scp and rsync
 - Hadoop, Spark, and the dnf plugin drop out of `.zshrc`, since the `/opt` paths and the package manager they assume are not there
@@ -73,11 +73,8 @@ hashes, so losing it at logout costs nothing.
 `run_onchange_after_install-student-cli.sh.tmpl` installs what the box does not
 ship: ripgrep, fd, bat, zoxide, and delta as static musl binaries under
 `~/.local/bin`, oh-my-zsh with zsh-autosuggestions and zsh-syntax-highlighting,
-and a rebuilt bat theme cache. Versions are pinned with the tarball checksum,
-same as the Zellij plugins. eza, fzf, Neovim, tmux, git, btop, go, rust, and uv
-are already on the machine.
-
-The Zellij plugin installer runs on macOS and Linux. It downloads zjstatus, zjstatus-hints, and zellij-palette with pinned SHA-256 checksums. curl is required.
+and a rebuilt bat theme cache. Versions are pinned with the tarball checksum.
+eza, fzf, Neovim, tmux, git, btop, go, rust, and uv are already on the machine.
 
 Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in three places:
 
