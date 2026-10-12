@@ -68,7 +68,7 @@ fi
 
 {{ if not $student -}}
 pdf() {
-    zathura "$@" > /dev/null 2>&1 &
+    zathura "$@" > /dev/null 2>&1 &!
 }
 
 {{ end -}}
