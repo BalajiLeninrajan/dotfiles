@@ -128,6 +128,15 @@ alias code="pwd | xargs nvim"
 {{ if not $student -}}
 alias mux="herdr"
 alias muxn='herdr --session "$(date +%H-%M-%S)"'
+# linux.student.cs picks a different node per login, and tmux sessions only
+# live on the node that started them, so pin one. Every node serves the
+# balancer's host key, which HostKeyAlias reuses from known_hosts.
+alias uw="ssh -o HostKeyAlias=linux.student.cs.uwaterloo.ca bleninra@ubuntu2404-006.student.cs.uwaterloo.ca"
+{{ else -}}
+# tmux stands in for herdr here. -A attaches to "main" when it exists and
+# creates it otherwise.
+alias mux="tmux new-session -A -s main"
+alias muxn='tmux new-session -s "$(date +%H-%M-%S)"'
 {{ end -}}
 alias grep="rg"
 alias cat="bat --theme='Catppuccin Mocha'"
