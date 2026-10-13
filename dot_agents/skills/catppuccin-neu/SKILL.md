@@ -64,3 +64,12 @@ CSS. `node_modules/catppuccin-neu/SPEC.md` has every rule and number.
   of the consumer, never a minor.
 - Hover and pointer states must actually work in the browser, not only on
   click. Verify in the running app before calling it done.
+- Claude Artifacts: the publish skeleton injects an unlayered reset (light
+  `color-scheme`, off-white body). Unlayered CSS beats the package's
+  `@layer cn.tokens`, so the page renders on white. Every artifact needs
+  this unlayered block from the first publish:
+  `:root { color-scheme: dark; background: var(--base); }`
+  `body { background: var(--base); color: var(--subtext-0); font: 400 14px/1.6 var(--sans); }`
+  The artifact CSP also blocks the jsdelivr stylesheet, so publish the
+  pinned tag's `css/` files through the Artifact `files` param and link
+  `cn/index.css` relatively.
