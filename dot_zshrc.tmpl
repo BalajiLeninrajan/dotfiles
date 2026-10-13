@@ -108,6 +108,19 @@ fi
 {{ end -}}
 {{ if $desktopLinux -}}
     alias open="xdg-open"
+
+# UW campus VPN. DMS can't answer the Duo prompt for AnyConnect, so log in
+# here and hand the cookie to NetworkManager. DMS then shows the tunnel and
+# can disconnect it. Answer the second password with push, sms or a code.
+uwvpn() {
+    local COOKIE HOST FINGERPRINT CONNECT_URL RESOLVE
+    nmcli connection show UWaterloo >/dev/null 2>&1 ||
+        nmcli connection add type vpn vpn-type openconnect con-name UWaterloo \
+            ifname -- vpn.data "gateway=vpn.uwaterloo.ca,protocol=anyconnect" >/dev/null || return
+    eval "$(openconnect --authenticate --protocol=anyconnect vpn.uwaterloo.ca)" || return
+    printf 'vpn.secrets.cookie:%s\nvpn.secrets.gateway:%s\nvpn.secrets.gwcert:%s\n' \
+        "$COOKIE" "$HOST" "$FINGERPRINT" | nmcli connection up UWaterloo passwd-file /dev/stdin
+}
 {{ end -}}
 
 alias vi="nvim"
