@@ -1,0 +1,25 @@
+#!/bin/sh
+# Starts DMS from a patched copy of its UI. The copy is rebuilt from
+# /usr/share/quickshell/dms on every start, so a dnf upgrade gets re-patched.
+# A patch that no longer applies is skipped, and if the copy can't be built
+# at all DMS starts from its embedded UI, so the desktop always comes up.
+
+src=/usr/share/quickshell/dms
+dest="${XDG_DATA_HOME:-$HOME/.local/share}/dms-shell"
+patches="$(dirname "$(readlink -f "$0")")"
+
+if [ -f "$src/shell.qml" ] && mkdir -p "$dest" && rsync -a --delete "$src/" "$dest/"; then
+    for p in "$patches"/*.patch; do
+        [ -e "$p" ] || continue
+        # Stop git from treating any parent directory as the repo root.
+        if GIT_CEILING_DIRECTORIES="$(dirname "$dest")" git -C "$dest" apply "$p"; then
+            echo "dms-run: applied $(basename "$p")"
+        else
+            echo "dms-run: skipped $(basename "$p"), it no longer applies to DMS $(cat "$src/VERSION")" >&2
+        fi
+    done
+    exec dms run --session -c "$dest" "$@"
+fi
+
+echo "dms-run: could not build $dest, starting the stock UI" >&2
+exec dms run --session "$@"

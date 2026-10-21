@@ -1,0 +1,61 @@
+diff --git a/Modals/DankLauncherV2/Controller.qml b/Modals/DankLauncherV2/Controller.qml
+--- a/Modals/DankLauncherV2/Controller.qml
++++ b/Modals/DankLauncherV2/Controller.qml
+@@ -143,8 +143,12 @@ Item {
+                 performSearch();
+                 return;
+             }
+-            if (searchQuery)
++            if (searchQuery) {
++                // A late plugin answer ranked first should take the selection
++                // unless the user has already moved it.
++                _queryDrivenSearch = selectedFlatIndex === getFirstItemIndex();
+                 performSearch();
++            }
+         }
+     }
+ 
+@@ -1528,7 +1532,7 @@ Item {
+             var meta = getPluginMetadata(pluginId);
+             var viewPref = getPluginViewPref(pluginId);
+             var orderIdx = orderMap[pluginId];
+-            var defaultPriority = AppSearchService.builtInPlugins[pluginId]?.defaultSectionPriority;
++            var defaultPriority = AppSearchService.builtInPlugins[pluginId]?.defaultSectionPriority ?? PluginService.getLauncherPlugin(pluginId)?.sectionPriority;
+             var priority;
+             if (orderIdx !== undefined) {
+                 priority = 2.6 + orderIdx * 0.01;
+diff --git a/Modals/DankLauncherV2/ItemTransformers.js b/Modals/DankLauncherV2/ItemTransformers.js
+--- a/Modals/DankLauncherV2/ItemTransformers.js
++++ b/Modals/DankLauncherV2/ItemTransformers.js
+@@ -245,6 +245,7 @@ function transformPluginItem(item, pluginId, selectLabel) {
+         pluginId: pluginId,
+         keywords: item.keywords || [],
+         actions: item.actions || [],
++        badgeLabel: item.badgeLabel || "",
+         primaryAction: item.primaryAction || {
+             name: selectLabel,
+             icon: "check",
+diff --git a/Modals/DankLauncherV2/SpotlightResultRow.qml b/Modals/DankLauncherV2/SpotlightResultRow.qml
+--- a/Modals/DankLauncherV2/SpotlightResultRow.qml
++++ b/Modals/DankLauncherV2/SpotlightResultRow.qml
+@@ -127,16 +127,14 @@ Rectangle {
+         anchors.left: parent.left
+         anchors.leftMargin: Theme.spacingS
+         anchors.verticalCenter: parent.verticalCenter
+-        color: root.isSelected ? Theme.primaryContainer : Theme.surfaceContainerHigh
+-        border.color: Theme.withAlpha(root.isSelected ? Theme.primary : Theme.outline, root.isSelected ? 0.28 : 0.12)
+-        border.width: 1
++        color: "transparent"
+ 
+         AppIconRenderer {
+             anchors.centerIn: parent
+-            width: 30
+-            height: 30
++            width: 34
++            height: 34
+             iconValue: root.iconValue
+-            iconSize: 30
++            iconSize: 34
+             fallbackText: (root.item?.name?.length > 0) ? root.item.name.charAt(0).toUpperCase() : "?"
+             materialIconSizeAdjustment: 10
+         }
