@@ -38,6 +38,12 @@ UW student.cs login nodes, matched on a `.student.cs.uwaterloo.ca` FQDN:
 - Hadoop, Spark, and the dnf plugin drop out of `.zshrc`, since the `/opt` paths and the package manager they assume are not there
 - The Claude Code SessionStart hook drops out of `settings.json`, because it drives the herdr status line
 
+wintermute, a Linux dev box reached over Tailscale, matched on hostname:
+
+- Shell, CLI, and agent config, plus herdr and its plugins
+- Every desktop config is ignored, like on student.cs. The only display there is the one Chrome draws on for browser agents
+- `herdr-server.service` keeps the herdr server up from boot, so `herdr --remote wintermute` always has a session to attach to. Other machines skip it, since the herdr client starts the server on demand
+
 The prompt is the `simple` theme everywhere. In an ssh session it also puts the
 hostname on the right, so a remote shell is obvious and, on student.cs, so is
 which node the load balancer picked.
@@ -75,6 +81,23 @@ ship: ripgrep, fd, bat, zoxide, and delta as static musl binaries under
 `~/.local/bin`, oh-my-zsh with zsh-autosuggestions and zsh-syntax-highlighting,
 and a rebuilt bat theme cache. Versions are pinned with the tarball checksum.
 eza, fzf, Neovim, tmux, git, btop, go, rust, and uv are already on the machine.
+
+### wintermute
+
+Set the hostname to `wintermute` before the first apply, or chezmoi takes the
+desktop Linux branch.
+
+```sh
+chezmoi init --apply BalajiLeninrajan/dotfiles
+herdr integration install claude
+loginctl enable-linger "$USER"
+systemctl --user enable --now herdr-server.service
+```
+
+herdr writes `~/.claude/hooks/herdr-agent-state.sh` itself, so the
+integration install is what makes the SessionStart hook in `settings.json`
+work. Linger starts the user manager at boot, so the server runs without a
+login.
 
 Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in three places:
 

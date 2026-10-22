@@ -7,6 +7,11 @@ README.md
      and the home directory is on a quota'd NFS mount shared by every node. */}}
 {{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) }}
 
+{{/* wintermute is a dev box reached over Tailscale. Agents and herdr run
+     there and the only display is the one Chrome draws on, so it keeps the
+     CLI and agent configs, herdr, and its systemd units, and nothing else. */}}
+{{- $devbox := eq .chezmoi.hostname "wintermute" }}
+
 {{ if $student }}
 .paneru.toml
 .config/sketchybar
@@ -39,6 +44,40 @@ Library
 .config/tiny-dfr
 .config/wireplumber
 .config/zathura
+{{ else if $devbox }}
+.bash_profile
+.bashrc
+.paneru.toml
+.config/sketchybar
+.config/borders
+Library
+.var
+.cursor
+.config/cava
+.config/dankcal
+.config/DankMaterialShell
+.config/danksearch
+.config/environment.d
+.config/ghostty
+.config/greetd
+.config/gtk-3.0
+.config/gtk-4.0
+.config/fcitx5
+.config/fontconfig
+.local/share/fcitx5
+.m17n.d
+.config/kanata
+.config/libinput
+.config/niri
+.config/qt5ct
+.config/qt6ct
+.config/system-clock
+.config/systemd/user/dms.service.d
+.config/systemd/user/kanata.service
+.config/thunderbird
+.config/tiny-dfr
+.config/wireplumber
+.config/zathura
 {{ else if eq .chezmoi.os "darwin" }}
 .bash_profile
 .bashrc
@@ -63,6 +102,11 @@ Library
 .config/sketchybar
 .config/borders
 Library/Application Support/vesktop
+{{ end }}
+
+{{/* Everywhere else the herdr client starts the server on demand. */}}
+{{ if not $devbox }}
+.config/systemd/user/herdr-server.service
 {{ end }}
 
 {{/* T2 Macs only. apple_bce is the bridge driver for the keyboard, trackpad,
