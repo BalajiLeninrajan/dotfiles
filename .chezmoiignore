@@ -16,8 +16,8 @@ Library
 .cursor
 .config/cava
 .config/dankcal
-.config/DankMaterialShell
-.config/danksearch
+.config/dms
+.config/dsearch
 .config/environment.d
 .config/ghostty
 .config/greetd
@@ -46,9 +46,9 @@ Library
 .var/app/app.zen_browser.zen
 .config/systemd
 .config/niri
-.config/DankMaterialShell
+.config/dms
 .config/dankcal
-.config/danksearch
+.config/dsearch
 .config/qt5ct
 .config/qt6ct
 .config/environment.d
