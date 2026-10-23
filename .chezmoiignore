@@ -27,6 +27,8 @@ Library
 .config/fcitx5
 .config/fontconfig
 .local/share/fcitx5
+.local/share/backgrounds
+.local/share/dms
 .m17n.d
 .config/kanata
 .config/libinput
@@ -55,6 +57,8 @@ Library
 .config/fcitx5
 .config/fontconfig
 .local/share/fcitx5
+.local/share/backgrounds
+.local/share/dms
 .m17n.d
 {{ else }}
 .bash_profile

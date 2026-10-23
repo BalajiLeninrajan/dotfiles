@@ -1,0 +1,24 @@
+{{- /* Desktop Linux only. Zen and Vesktop config is tracked under .var/app,
+       which does nothing until the apps exist. Apps already installed in
+       either installation are left alone, so this never needs root. */ -}}
+{{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) -}}
+{{ if and (eq .chezmoi.os "linux") (not $student) -}}
+#!/bin/sh
+set -eu
+
+command -v flatpak >/dev/null 2>&1 || exit 0
+
+flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+for app in \
+    app.zen_browser.zen \
+    com.spotify.Client \
+    dev.vencord.Vesktop \
+    org.mozilla.thunderbird_esr
+do
+    flatpak info "$app" >/dev/null 2>&1 || flatpak install --user --noninteractive flathub "$app"
+done
+{{ else -}}
+#!/bin/sh
+exit 0
+{{ end -}}

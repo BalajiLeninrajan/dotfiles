@@ -109,7 +109,7 @@
           "id": "launcherButton",
           "enabled": true,
           "launcherLogoMode": "os",
-          "launcherLogoCustomPath": "/home/balaji/Documents/System-Backup/ProfilePicturePixelDim.png",
+          "launcherLogoCustomPath": "/home/balaji/.local/share/dms/launcher-logo.png",
           "launcherLogoColorOverride": "primary"
         },
         "workspaceSwitcher",
@@ -245,7 +245,7 @@
           "id": "launcherButton",
           "enabled": true,
           "launcherLogoMode": "os",
-          "launcherLogoCustomPath": "/home/balaji/Documents/System-Backup/ProfilePicturePixelDim.png",
+          "launcherLogoCustomPath": "/home/balaji/.local/share/dms/launcher-logo.png",
           "launcherLogoColorOverride": "primary"
         },
         "workspaceSwitcher"

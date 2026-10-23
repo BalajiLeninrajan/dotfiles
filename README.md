@@ -25,6 +25,8 @@ macOS only:
 Linux only:
 
 - Niri, with DankMaterialShell (DMS) and its companions: dankcal, danksearch, qt5ct/qt6ct, and the `environment.d` entry DMS needs
+- The DMS wallpaper (`~/.local/share/backgrounds/`) and custom launcher logo (`~/.local/share/dms/`)
+- Flatpak apps, installed per user from Flathub by `run_onchange_after_install-flatpaks.sh`. It skips any app already installed, system-wide or per user
 - GTK 3/4 settings
 - T2 Macs only, gated on `/sys/module/apple_bce`: the libinput palm-rejection plugin, tiny-dfr Touch Bar config and resume unit, and the kanata resume unit
 - Claude Code, Codex, and Cursor share one `~/.agents` tree; the per-tool paths are symlinks into it
