@@ -5,7 +5,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "opus",
 {{ if not $student }}  "hooks": {
     "SessionStart": [
       {
@@ -26,7 +26,8 @@
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
-    "cloudflare@cloudflare": true
+    "cloudflare@cloudflare": true,
+    "posthog@posthog": true
   },
   "extraKnownMarketplaces": {
     "cloudflare": {
@@ -34,11 +35,23 @@
         "source": "github",
         "repo": "cloudflare/skills"
       }
+    },
+    "posthog": {
+      "source": {
+        "source": "github",
+        "repo": "PostHog/ai-plugin"
+      }
     }
   },
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
   "skipWorkflowUsageWarning": true,
   "theme": "custom:catppuccin-mocha",
   "editorMode": "vim",
-  "autoCompactEnabled": true
+  "autoCompactEnabled": true,
+  "switchModelsOnFlag": false
 }
