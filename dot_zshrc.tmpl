@@ -107,7 +107,7 @@ elif command -v xclip >/dev/null 2>&1; then
 fi
 {{ end -}}
 {{ if $desktopLinux -}}
-    alias open="xdg-open"
+alias open="gio open"
 
 # UW campus VPN. DMS can't answer the Duo prompt for AnyConnect, so log in
 # here and hand the cookie to NetworkManager. DMS then shows the tunnel and
@@ -176,6 +176,9 @@ fi
 export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman --theme=\"Catppuccin Mocha\"'"
 
 unset LS_COLORS
+
+# opencode
+export PATH=$HOME/.opencode/bin:$PATH
 
 # zoxide last: its doctor warns when anything runs after its init.
 if command -v zoxide >/dev/null 2>&1; then
