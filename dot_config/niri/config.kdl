@@ -286,6 +286,10 @@ binds {
     Mod+Return hotkey-overlay-title="Open Terminal" { spawn "ghostty"; }
     Mod+E hotkey-overlay-title="File Manager" { spawn "nautilus" "--new-window"; }
     Mod+B hotkey-overlay-title="Browser" { spawn "flatpak" "run" "app.zen_browser.zen"; }
+
+    // Power button locks on AC and suspends on battery. Binding it replaces
+    // niri's built-in suspend; DMS still locks before suspending.
+    XF86PowerOff allow-when-locked=true { spawn-sh "if [ \"$(cat /sys/class/power_supply/ADP1/online)\" = 1 ]; then dms ipc call lock lock; else systemctl suspend; fi"; }
 }
 
 // Include dms files
