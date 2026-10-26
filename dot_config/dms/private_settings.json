@@ -173,6 +173,10 @@
           "showBrightnessIcon": false,
           "showBrightnessPercent": false,
           "showBatteryIcon": false
+        },
+        {
+          "id": "powerMenuButton",
+          "enabled": true
         }
       ],
       "spacing": 0,
