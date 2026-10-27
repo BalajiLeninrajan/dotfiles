@@ -143,6 +143,12 @@ sudo systemctl enable touchbar-resume.service
 
 The kanata resume unit is installed the same way; see the Kanata section above.
 
+#### Touch ID
+
+The sensor sits behind the T2's Secure Enclave, so there is no USB reader. [KaiT2en](https://github.com/kaiT2en/KaiT2en-Fedora)'s `t2-touchid` daemon reaches it over the `t2_ncm` link and feeds fprintd through libfprint's virtual device. It is built from source and is not tracked here. Only fingers enrolled in macOS work, and after the T2 loses power, macOS needs one password login before Linux sees them again.
+
+With `with-fingerprint` enabled in authselect, sudo and greetd take a finger or the password, since both include `system-auth`. `.config/dms/settings.json` sets `enableFprint` and `greeterEnableFprint`, so the DMS lock screen and greeter offer both too.
+
 #### Clock after power-off
 
 `rtc_cmos` on a T2 does not keep time while the machine is off. The kernel reads it

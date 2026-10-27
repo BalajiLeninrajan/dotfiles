@@ -833,6 +833,8 @@
     }
   ],
   "lockScreenShowPowerActions": true,
+  "enableFprint": true,
+  "greeterEnableFprint": true,
   "lockScreenPowerOffMonitorsOnLock": true,
   "greeterPamExternallyManaged": false,
   "muxType": "herdr",
