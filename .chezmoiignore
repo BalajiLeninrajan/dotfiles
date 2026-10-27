@@ -69,9 +69,9 @@ Library
 Library/Application Support/vesktop
 {{ end }}
 
-{{/* T2 Macs only. apple_bce is the bridge driver for the keyboard, trackpad,
-     and Touch Bar on those machines, so its presence identifies them. */}}
-{{ if not (and (eq .chezmoi.os "linux") (stat "/sys/module/apple_bce")) }}
+{{/* T2 Macs only. The bridge driver for the keyboard, trackpad, and Touch Bar
+     identifies them: apple_bce on older kernels, t2bce_core on newer ones. */}}
+{{ if not (and (eq .chezmoi.os "linux") (or (stat "/sys/module/apple_bce") (stat "/sys/module/t2bce_core"))) }}
 .config/libinput
 .config/tiny-dfr
 .config/kanata/kanata-resume.service

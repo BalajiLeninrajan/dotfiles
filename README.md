@@ -111,7 +111,7 @@ Forced exit from any layer is `lctl+spc+esc`, in `defsrc` terms, i.e. before rem
 
 ### T2 Macs
 
-`.chezmoiignore` skips the T2 files unless `/sys/module/apple_bce` exists, which it does on any T2 Mac booting Linux since that driver carries the internal keyboard.
+`.chezmoiignore` skips the T2 files unless `/sys/module/apple_bce` or `/sys/module/t2bce_core` exists. One of them is loaded on any T2 Mac booting Linux, since that bridge driver carries the internal keyboard. Newer t2linux kernels ship `t2bce_core`.
 
 Root-owned files are tracked as copies under `~/.config` and installed by hand. Nothing in this repo runs `sudo` for you.
 
