@@ -1,0 +1,13 @@
+{
+  "zoom": 1.0,
+  "sounds": {
+    "enabled": true
+  },
+  "font": "JetBrainsMono Nerd Font",
+  "font_size": 13.5,
+  "font_ligatures": false,
+  "ui_font": "Adwaita Sans",
+  "pane_scrollbars": false,
+  "minimum_contrast": 1.0,
+  "theme": "catppuccin-mocha"
+}

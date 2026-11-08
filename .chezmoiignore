@@ -24,6 +24,7 @@ Library
 .config/gtk-3.0
 .config/gtk-4.0
 .config/herdr
+.config/herdr-app
 .config/fcitx5
 .config/fontconfig
 .local/share/fcitx5
@@ -44,6 +45,8 @@ Library
 .config/wireplumber
 .config/zathura
 {{ else if eq .chezmoi.os "darwin" }}
+{{/* keys.json binds Linux modifiers; the macOS app keeps its own cmd defaults. */}}
+.config/herdr-app/keys.json
 .bash_profile
 .bashrc
 .var/app/dev.vencord.Vesktop
