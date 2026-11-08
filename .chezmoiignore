@@ -29,6 +29,7 @@ Library
 .local/share/fcitx5
 .local/share/backgrounds
 .local/share/dms
+.local/share/fonts
 .m17n.d
 .config/kanata
 .config/libinput
@@ -59,6 +60,7 @@ Library
 .local/share/fcitx5
 .local/share/backgrounds
 .local/share/dms
+.local/share/fonts
 .m17n.d
 {{ else }}
 .bash_profile

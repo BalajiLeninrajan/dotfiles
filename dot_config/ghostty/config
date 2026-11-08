@@ -1,6 +1,8 @@
 theme=Catppuccin Mocha
 
 font-family="JetBrainsMono Nerd Font"
+# Tamil fallback refit to the cell grid, see .tools/tamil-cell-mono
+font-family="Tamil Cell Mono"
 font-size=12
 
 window-inherit-working-directory=true
