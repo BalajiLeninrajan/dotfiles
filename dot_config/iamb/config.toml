@@ -1,0 +1,47 @@
+default_profile = "beeper"
+
+[profiles.beeper]
+user_id = "@gitbranch:beeper.com"
+
+[settings]
+theme = "catppuccin-mocha-dark"
+username_display = "displayname"
+state_event_display = false
+# Hide bridge bots from :members and the timeline.
+service_member_display = false
+default_split = "vertical"
+ignorecase = true
+# Room for the sender's name before messages start (default 30). Longer names get truncated.
+user_gutter_width = 16
+
+[settings.mouse]
+enabled = true
+
+# Favorites on top, then one section per network, newest chat first in each.
+# The section headers name the network, so rows don't need a network label.
+[settings.sort]
+chats = ["favorite", "network", "recent"]
+
+[settings.notifications]
+enabled = true
+sound_hint = "message-new-instant"
+
+# <C-W>f always opens the new split to the left; <C-W>F opens it, then moves it right.
+# Not remapping <C-W>f itself, in case macro output goes back through the keymap and loops.
+[macros."normal|visual"]
+"<C-W>F" = "<C-W>f<C-W>L"
+"gs" = ":spaces<Enter>"
+# gr shadows Vim's virtual replace of one character, which a chat composer never needs.
+"gr" = ":unreads<Enter>"
+
+# Backspace goes back to what this window showed before (Vim's alternate buffer).
+# Normal mode only, so it still deletes in the composer.
+[macros.normal]
+"<BS>" = "<C-^>"
+
+# Start on the spaces list instead of the welcome screen.
+[layout]
+style = "config"
+
+[[layout.tabs]]
+window = "iamb://spaces"
