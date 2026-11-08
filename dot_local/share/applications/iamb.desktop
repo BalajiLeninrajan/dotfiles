@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=iamb
+GenericName=Matrix Client
+Comment=Beeper chats in iamb
+Icon=iamb
+Exec=ghostty -e iamb %u
+Terminal=false
+Categories=Network;InstantMessaging;Chat;
+Keywords=Matrix;Beeper;chat;
+MimeType=x-scheme-handler/matrix;
+StartupNotify=false

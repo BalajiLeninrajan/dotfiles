@@ -30,6 +30,7 @@ Library
 .local/share/backgrounds
 .local/share/dms
 .local/share/fonts
+.local/share/applications
 .m17n.d
 .config/kanata
 .config/libinput
@@ -61,6 +62,7 @@ Library
 .local/share/backgrounds
 .local/share/dms
 .local/share/fonts
+.local/share/applications
 .m17n.d
 {{ else }}
 .bash_profile

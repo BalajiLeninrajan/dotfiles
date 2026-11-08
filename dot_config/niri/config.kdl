@@ -164,6 +164,7 @@ environment {
   XDG_CURRENT_DESKTOP "niri"
 }
 spawn-at-startup "fcitx5" "-d" "--replace"
+spawn-at-startup "ghostty" "-e" "iamb"
 hotkey-overlay {
     skip-at-startup
 }
