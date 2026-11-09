@@ -28,6 +28,7 @@ Library
 .config/fcitx5
 .config/fontconfig
 .local/share/fcitx5
+.local/share/flatpak
 .local/share/backgrounds
 .local/share/dms
 .local/share/fonts
@@ -62,6 +63,7 @@ Library
 .config/fcitx5
 .config/fontconfig
 .local/share/fcitx5
+.local/share/flatpak
 .local/share/backgrounds
 .local/share/dms
 .local/share/fonts
