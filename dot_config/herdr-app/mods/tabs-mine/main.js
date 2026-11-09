@@ -11,32 +11,6 @@ function find(node, id) {
   return null;
 }
 
-// Catppuccin Mocha accents in hue order. A one-color icon takes the accent
-// nearest its brand hue (the program table's tile); a brand with no hue keeps the
-// color the caller passes.
-const MOCHA = ["#f38ba8", "#fab387", "#f9e2af", "#a6e3a1", "#94e2d5", "#89dceb", "#74c7ec", "#89b4fa", "#b4befe", "#cba6f7", "#f5c2e7"];
-// Pictures with one shape, drawn as glyphs so they leave their brand color for Mocha's.
-const GLYPH = { claude: "#fab387" };
-function hsv(hex) {
-  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
-  const max = Math.max(r, g, b), d = max - Math.min(r, g, b);
-  const h = !d ? 0 : max === r ? (g - b) / d : max === g ? 2 + (b - r) / d : 4 + (r - g) / d;
-  return { h: (h * 60 + 360) % 360, s: max ? d / max : 0 };
-}
-const apart = (a, b) => Math.min(Math.abs(a - b), 360 - Math.abs(a - b));
-function mocha(p, neutral) {
-  if (GLYPH[p.key]) return GLYPH[p.key];
-  if (!/^#[0-9a-f]{6}$/i.test(p.tile ?? "")) return neutral;
-  const { h, s } = hsv(p.tile);
-  if (s < 0.3) return neutral;
-  return MOCHA.reduce((best, c) => apart(hsv(c).h, h) < apart(hsv(best).h, h) ? c : best);
-}
-// A program's icon: a glyph in its Mocha accent, or a picture.
-function icon(p, size, neutral) {
-  if (!p?.icon) return null;
-  return p.tint || GLYPH[p.key] ? svg(p.icon).size(size).flex_none().text_color(mocha(p, neutral)) : image(p.icon).w(size).h(size).flex_none();
-}
-
 export default class Tabs extends View {
   init() {
     this.pressed = null;
@@ -107,7 +81,7 @@ export default class Tabs extends View {
           else run("tab.select", { id: c.id });
         })
         .on_mouse_down("right", (_e, cx) => { cx.stop_propagation(); openOverlay({ mod: "menu", kind: "popup", width: 200, props: { tab: "tab", target: { id: c.id, space: space.id } } }); })
-        .when(Boolean(program?.icon), el => el.child(icon(program, 14, t.muted)))
+        .when(Boolean(program?.icon), el => el.child(program.tint ? svg(program.icon).size(14).text_color(t.muted) : image(program.icon).size(14)))
         .child(div().max_w(170).truncate().child(c.zoomed ? `${name} Z` : name))
         .when(c.status === "working", el => el.child(svg("mods/workspace-chrome/spinner.svg").size(12).flex_none().text_color(t.working).spin(900)))
         .when(c.status === "blocked" || c.status === "done", el => el.child(div().size(6).rounded(3).bg(t[c.status])))
