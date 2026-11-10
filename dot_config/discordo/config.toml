@@ -1,6 +1,14 @@
+# Opening a channel leaves focus where it was, so the guilds tree can preview
+# channels. ctrl+i focuses the composer.
+auto_focus = false
+
 [markdown]
 # Code blocks in the same palette as the rest of the client.
 theme = "catppuccin-mocha"
+
+# Start guild folders collapsed.
+[ui.guilds_tree]
+auto_expand_folders = false
 
 # Start with the members pane hidden so messages get the width. alt+m brings it back.
 [members_tree]
