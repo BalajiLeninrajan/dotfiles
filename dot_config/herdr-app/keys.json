@@ -35,6 +35,7 @@
     "ctrl-shift-x": "pane.close",
     "ctrl-shift-z": "pane.zoom",
     "ctrl-shift-l": "layout.switch",
+    "ctrl-shift-r": "mod.open:revive",
     "f2": "tab.rename",
     "shift-f2": "space.rename"
   },
