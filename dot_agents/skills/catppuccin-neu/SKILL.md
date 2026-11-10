@@ -20,7 +20,7 @@ CSS. `node_modules/catppuccin-neu/SPEC.md` has every rule and number.
      `import "catppuccin-neu/css/index.css"` at the root.
    - No `package.json`: link
      `https://cdn.jsdelivr.net/gh/BalajiLeninrajan/catppuccin-neu@vX.Y.Z/css/index.css`.
-   - Pin a full tag. Add the Google Fonts link (Inter, JetBrains Mono) to
+   - Pin a full tag. Add the Google Fonts link (IBM Plex Sans, JetBrains Mono) to
      every page.
 2. Build from recipes (`btn btn-primary`, `panel`, `well`, `field`,
    `table-neu`, `chip-tone`, `modal`, `drawer`, `toast`) and compose `cn-*`
@@ -68,8 +68,8 @@ CSS. `node_modules/catppuccin-neu/SPEC.md` has every rule and number.
   `color-scheme`, off-white body). Unlayered CSS beats the package's
   `@layer cn.tokens`, so the page renders on white. Every artifact needs
   this unlayered block from the first publish:
-  `:root { color-scheme: dark; background: var(--base); }`
-  `body { background: var(--base); color: var(--subtext-0); font: 400 14px/1.6 var(--sans); }`
+  `:root { color-scheme: dark; background: var(--mantle); }`
+  `body { background: var(--mantle); color: var(--subtext-0); font: 400 14px/1.6 var(--sans); }`
   The artifact CSP also blocks the jsdelivr stylesheet, so publish the
   pinned tag's `css/` files through the Artifact `files` param and link
   `cn/index.css` relatively.
