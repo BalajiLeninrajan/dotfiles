@@ -33,6 +33,7 @@ Library
 .local/share/dms
 .local/share/fonts
 .local/share/applications
+.local/bin/term-app
 .m17n.d
 .config/kanata
 .config/libinput
@@ -68,6 +69,7 @@ Library
 .local/share/dms
 .local/share/fonts
 .local/share/applications
+.local/bin/term-app
 .m17n.d
 {{ else }}
 .bash_profile

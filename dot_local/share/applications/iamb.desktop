@@ -1,12 +1,6 @@
+# Hides the entry the iamb RPM ships in /usr/share/applications.
+# com.mitchellh.ghostty.iamb.desktop replaces it.
 [Desktop Entry]
 Type=Application
 Name=iamb
-GenericName=Matrix Client
-Comment=Beeper chats in iamb
-Icon=iamb
-Exec=ghostty -e iamb %u
-Terminal=false
-Categories=Network;InstantMessaging;Chat;
-Keywords=Matrix;Beeper;chat;
-MimeType=x-scheme-handler/matrix;
-StartupNotify=false
+Hidden=true
