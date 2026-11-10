@@ -13,14 +13,16 @@ default_split = "vertical"
 ignorecase = true
 # Room for the sender's name before messages start (default 30). Longer names get truncated.
 user_gutter_width = 16
+# Yank and paste through the system clipboard, like Vim's clipboard=unnamedplus.
+default_register = "+"
 
 [settings.mouse]
-enabled = true
+enabled = false
 
-# Favorites on top, then one section per network, newest chat first in each.
-# The section headers name the network, so rows don't need a network label.
+# Newest chat first in every list. chats, dms and spaces inherit the rooms value.
 [settings.sort]
-chats = ["favorite", "network", "recent"]
+rooms = ["recent"]
+space = ["recent"]
 
 [settings.notifications]
 enabled = true
@@ -30,9 +32,28 @@ sound_hint = "message-new-instant"
 # Not remapping <C-W>f itself, in case macro output goes back through the keymap and loops.
 [macros."normal|visual"]
 "<C-W>F" = "<C-W>f<C-W>L"
-"gs" = ":spaces<Enter>"
+# <Bslash> leads jumps between chats. g stays for jumps inside a chat, as in Vim.
+"<Bslash>s" = ":spaces<Enter>"
+"<Bslash>r" = ":unreads<Enter>"
+"<Bslash>R" = ":unreads clear<Enter>"
+"<Bslash>m" = ":mentions<Enter>"
+# Fuzzy-pick a chat. Inside a space or a room list, it picks from that list instead.
+"<Bslash><Bslash>" = ":pick<Enter>"
+
+# g + letter acts on the selected message.
 # gr shadows Vim's virtual replace of one character, which a chat composer never needs.
-"gr" = ":unreads<Enter>"
+"gr" = ":reply<Enter>"
+# Jump to the message this one replies to, like Vim's go-to-definition.
+"gd" = ":replied<Enter>"
+"gx" = ":open<Enter>"
+"gc" = ":edit<Enter>"
+"gp" = ":pin<Enter>"
+# Drop the current reply or edit and wipe the draft, without asking.
+"<Bslash>c" = ":cancel!<Enter>"
+# Pick an emoji from the fuzzy list. Shadows Vim's print-ASCII-value, which is unmapped here.
+"ga" = ":react<Enter>"
+# Stops at the prompt, to confirm the delete.
+"gD" = ":redact"
 
 # Backspace goes back to what this window showed before (Vim's alternate buffer).
 # Normal mode only, so it still deletes in the composer.
