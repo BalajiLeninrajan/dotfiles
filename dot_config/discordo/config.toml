@@ -1,0 +1,85 @@
+[markdown]
+# Code blocks in the same palette as the rest of the client.
+theme = "catppuccin-mocha"
+
+# Start with the members pane hidden so messages get the width. alt+m brings it back.
+[members_tree]
+visible = false
+
+# Catppuccin Mocha, mauve accent. No backgrounds are set except on selections,
+# so the terminal's own Mocha base shows through.
+#
+#   text     #cdd6f4   subtext1 #bac2de   subtext0 #a6adc8
+#   overlay1 #7f849c   overlay0 #6c7086
+#   surface2 #585b70   surface1 #45475a   surface0 #313244
+#   mauve    #cba6f7   lavender #b4befe   blue     #89b4fa   sapphire #74c7ec
+#   teal     #94e2d5   green    #a6e3a1   yellow   #f9e2af   peach    #fab387
+#   red      #f38ba8
+
+[theme.title]
+normal_style = { foreground = "#7f849c" }
+active_style = { foreground = "#cba6f7", attributes = "bold" }
+
+[theme.footer]
+normal_style = { foreground = "#7f849c" }
+active_style = { foreground = "#cba6f7", attributes = "bold" }
+
+[theme.border]
+normal_style = { foreground = "#585b70" }
+active_style = { foreground = "#cba6f7" }
+
+[theme.guilds_tree]
+graphics_color = "#45475a"
+online_style = { foreground = "#a6e3a1" }
+idle_style = { foreground = "#f9e2af" }
+dnd_style = { foreground = "#f38ba8" }
+offline_style = { foreground = "#6c7086" }
+speaking_style = { foreground = "#a6e3a1", attributes = "bold" }
+voice_limit_style = { foreground = "#89b4fa" }
+
+[theme.members_tree]
+graphics_color = "#45475a"
+online_style = { foreground = "#a6e3a1" }
+idle_style = { foreground = "#f9e2af" }
+dnd_style = { foreground = "#f38ba8" }
+offline_style = { foreground = "#6c7086" }
+
+[theme.scroll_bar]
+track_style = { foreground = "#313244" }
+thumb_style = { foreground = "#6c7086" }
+
+[theme.messages_list]
+author_style = { foreground = "#b4befe", attributes = "bold" }
+mention_style = { foreground = "#89b4fa", attributes = "bold" }
+emoji_style = { foreground = "#94e2d5" }
+url_style = { foreground = "#74c7ec" }
+attachment_style = { foreground = "#fab387" }
+reaction_style = { foreground = "#a6adc8" }
+own_reaction_style = { foreground = "#cba6f7", attributes = "bold" }
+message_style = { foreground = "#cdd6f4" }
+selected_message_style = { background = "#313244" }
+# Message logger, from the fork in ~/Documents/code/discordo. Upstream ignores these two keys.
+deleted_message_style = { foreground = "#f38ba8" }
+edit_history_style = { foreground = "#6c7086", attributes = "strikethrough" }
+
+[theme.messages_list.embeds]
+provider_style = { foreground = "#7f849c", attributes = "italic" }
+author_style = { foreground = "#bac2de", attributes = "italic" }
+title_style = { foreground = "#89b4fa", attributes = "bold" }
+description_style = { foreground = "#a6adc8" }
+field_name_style = { foreground = "#b4befe", attributes = "bold" }
+field_value_style = { foreground = "#cdd6f4" }
+footer_style = { foreground = "#7f849c", attributes = "italic" }
+url_style = { foreground = "#74c7ec", underline = "solid" }
+
+[theme.autocomplete]
+selected_style = { foreground = "#cba6f7", background = "#313244", attributes = "bold" }
+
+[theme.dialog]
+background_style = { foreground = "#6c7086" }
+
+[theme.help]
+short_key_style = { foreground = "#cba6f7" }
+short_desc_style = { foreground = "#7f849c" }
+full_key_style = { foreground = "#cba6f7" }
+full_desc_style = { foreground = "#a6adc8" }

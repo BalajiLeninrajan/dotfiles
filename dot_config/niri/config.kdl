@@ -165,6 +165,7 @@ environment {
 }
 spawn-at-startup "fcitx5" "-d" "--replace"
 spawn-at-startup "ghostty" "-e" "iamb"
+spawn-at-startup "ghostty" "-e" "discordo"
 hotkey-overlay {
     skip-at-startup
 }
