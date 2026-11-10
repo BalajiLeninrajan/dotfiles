@@ -6,6 +6,10 @@ theme = "catppuccin-mocha"
 [members_tree]
 visible = false
 
+# Up in an empty composer no longer edits the last message.
+[keybinds.composer]
+edit_last = ""
+
 # Catppuccin Mocha, mauve accent. No backgrounds are set except on selections,
 # so the terminal's own Mocha base shows through.
 #
