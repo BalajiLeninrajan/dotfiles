@@ -1,0 +1,6 @@
+[Unit]
+Description=Notify about due khal event reminders
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/khal-notify

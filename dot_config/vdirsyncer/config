@@ -1,0 +1,56 @@
+# Calendars synced into ~/.local/share/calendars for khal.
+# Secrets live in the GNOME keyring, not here:
+#   secret-tool store --label=... service vdirsyncer account <name>
+# with <name> being uw-portal, google-client-id or google-client-secret.
+
+[general]
+status_path = "~/.local/share/vdirsyncer/status/"
+
+# UW Portal schedule. Read-only feed; the URL carries a private token.
+[pair portal]
+a = "portal_remote"
+b = "portal_local"
+collections = null
+
+[storage portal_remote]
+type = "http"
+url.fetch = ["command", "secret-tool", "lookup", "service", "vdirsyncer", "account", "uw-portal"]
+
+[storage portal_local]
+type = "filesystem"
+path = "~/.local/share/calendars/portal/"
+fileext = ".ics"
+
+# WARG team calendar. Public, read-only.
+[pair warg]
+a = "warg_remote"
+b = "warg_local"
+collections = null
+
+[storage warg_remote]
+type = "http"
+url = "https://calendar.google.com/calendar/ical/uw.warg%40gmail.com/public/basic.ics"
+
+[storage warg_local]
+type = "filesystem"
+path = "~/.local/share/calendars/warg/"
+fileext = ".ics"
+
+# Personal Google calendars, read and write.
+[pair google]
+a = "google_remote"
+b = "google_local"
+collections = ["from a"]
+# Only the names: a color file would beat the green set in the khal config.
+metadata = ["displayname"]
+
+[storage google_remote]
+type = "google_calendar"
+token_file = "~/.local/share/vdirsyncer/google_token"
+client_id.fetch = ["command", "secret-tool", "lookup", "service", "vdirsyncer", "account", "google-client-id"]
+client_secret.fetch = ["command", "secret-tool", "lookup", "service", "vdirsyncer", "account", "google-client-secret"]
+
+[storage google_local]
+type = "filesystem"
+path = "~/.local/share/calendars/google/"
+fileext = ".ics"

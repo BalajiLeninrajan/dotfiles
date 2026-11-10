@@ -1,0 +1,13 @@
+[Unit]
+Description=Sync calendars with vdirsyncer
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/vdirsyncer sync portal warg
+# Google runs on its own so a missing or expired token can't stop the feeds
+# from syncing. The leading "-" keeps its failure from failing the unit.
+ExecStart=-/usr/bin/vdirsyncer metasync google
+ExecStart=-/usr/bin/vdirsyncer sync google
+# Refresh khal's cache so khal-notify, which reads it directly, sees new events.
+ExecStartPost=-/bin/sh -c 'khal list today today >/dev/null 2>&1'

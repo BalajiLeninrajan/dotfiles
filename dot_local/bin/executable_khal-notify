@@ -1,0 +1,156 @@
+#!/usr/bin/python3
+"""Send a desktop notification for each khal event reminder that is due.
+
+Reads khal's cache (khal.db) directly instead of loading khal, so a run with
+nothing due costs a few milliseconds. Only event instances in the coming week
+whose event has a VALARM are looked at. The cache is refreshed whenever khal
+runs, and vdirsyncer.service runs khal after each sync.
+
+A user timer runs this every minute. What it sent is kept in
+$XDG_STATE_HOME/khal-notify/sent.json so each reminder fires once.
+"""
+
+import datetime as dt
+import json
+import os
+import sqlite3
+import subprocess
+from pathlib import Path
+
+# A reminder that fell due while the machine was asleep still notifies if it is
+# this recent, so waking up doesn't replay a whole day of them.
+CATCH_UP = dt.timedelta(minutes=15)
+# Furthest ahead an event can start and still have its reminder due now.
+LOOKAHEAD = dt.timedelta(days=8)
+KEEP = dt.timedelta(days=2)
+# Calendars left out. WARG has no real reminders.
+SKIP = ("warg",)
+
+HOME = Path.home()
+DB = Path(os.environ.get("XDG_DATA_HOME", HOME / ".local/share")) / "khal/khal.db"
+STATE = Path(os.environ.get("XDG_STATE_HOME", HOME / ".local/state")) / "khal-notify/sent.json"
+
+# Event instances in the window whose event has a reminder. recs_loc holds
+# timed events as Unix timestamps; recs_float holds all-day and floating ones
+# as naive local times encoded the same way.
+QUERY = """
+SELECT r.dtstart, r.dtend, r.ref, r.dtype, e.href, e.item, {floating}
+FROM {table} r JOIN events e ON e.href = r.href AND e.calendar = r.calendar
+WHERE r.dtstart BETWEEN ? AND ?
+  AND e.item LIKE '%BEGIN:VALARM%'
+  AND r.calendar NOT IN ({skip})
+"""
+
+
+def load_sent() -> dict[str, str]:
+    try:
+        return json.loads(STATE.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def save_sent(sent: dict[str, str]) -> None:
+    STATE.parent.mkdir(parents=True, exist_ok=True)
+    tmp = STATE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(sent))
+    tmp.replace(STATE)
+
+
+def to_local(timestamp: int, floating: bool) -> dt.datetime:
+    if floating:
+        naive = dt.datetime.fromtimestamp(timestamp, dt.timezone.utc).replace(tzinfo=None)
+        return naive.astimezone()
+    return dt.datetime.fromtimestamp(timestamp).astimezone()
+
+
+def instance_rows(now: dt.datetime):
+    skip = ",".join("?" * len(SKIP))
+    with sqlite3.connect(f"file:{DB}?mode=ro", uri=True) as db:
+        for table, floating in (("recs_loc", 0), ("recs_float", 1)):
+            if floating:
+                local = now.replace(tzinfo=None)
+                lo = int((local - dt.timedelta(days=1)).replace(tzinfo=dt.timezone.utc).timestamp())
+                hi = int((local + LOOKAHEAD).replace(tzinfo=dt.timezone.utc).timestamp())
+            else:
+                lo = int((now - dt.timedelta(days=1)).timestamp())
+                hi = int((now + LOOKAHEAD).timestamp())
+            yield from db.execute(QUERY.format(table=table, floating=floating, skip=skip), (lo, hi, *SKIP))
+
+
+def vevent_for(calendar, ref: str):
+    """The VEVENT for this instance: its override if it has one, else the main event."""
+    events = calendar.walk("VEVENT")
+    if ref != "PROTO":
+        for event in events:
+            rid = event.get("RECURRENCE-ID")
+            if rid is not None and _timestamp(rid.dt) == int(ref):
+                return event
+    return next((e for e in events if "RECURRENCE-ID" not in e), events[0])
+
+
+def _timestamp(value) -> int:
+    if not isinstance(value, dt.datetime):
+        value = dt.datetime.combine(value, dt.time.min)
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=dt.timezone.utc)
+    return int(value.timestamp())
+
+
+def due_times(event, start: dt.datetime, end: dt.datetime):
+    """When each pop-up reminder on the event is due."""
+    for alarm in event.walk("VALARM"):
+        if str(alarm.get("ACTION", "")).upper() != "DISPLAY" or "TRIGGER" not in alarm:
+            continue
+        trigger = alarm["TRIGGER"]
+        if isinstance(trigger.dt, dt.timedelta):
+            base = end if trigger.params.get("RELATED") == "END" else start
+            yield trigger.dt, base + trigger.dt
+        elif isinstance(trigger.dt, dt.datetime):
+            yield trigger.dt.isoformat(), trigger.dt.astimezone()
+
+
+def body_for(start: dt.datetime, allday: bool, location: str, now: dt.datetime) -> str:
+    if allday:
+        when = "All day, " + start.strftime("%a %b %-d")
+    else:
+        minutes = round((start - now).total_seconds() / 60)
+        if minutes > 0:
+            ahead = f"in {minutes} min" if minutes < 60 else f"in {minutes // 60} h {minutes % 60:02d} min"
+        else:
+            ahead = "now" if minutes == 0 else "started"
+        when = f"{start:%H:%M} ({ahead})"
+    return f"{when}\n{location}" if location else when
+
+
+def main() -> None:
+    now = dt.datetime.now().astimezone()
+    rows = list(instance_rows(now))
+    sent = load_sent()
+
+    if rows:
+        import icalendar  # only paid for when an event in the window has a reminder
+
+        for dtstart, dtend, ref, dtype, href, item, floating in rows:
+            start, end = to_local(dtstart, floating), to_local(dtend, floating)
+            event = vevent_for(icalendar.Calendar.from_ical(item), ref)
+            for trigger, due in due_times(event, start, end):
+                if not now - CATCH_UP < due <= now:
+                    continue
+                key = f"{href}|{start.isoformat()}|{trigger}"
+                if key in sent:
+                    continue
+                subprocess.run(
+                    ["notify-send", "--app-name=khal", "--icon=x-office-calendar",
+                     str(event.get("SUMMARY", "Event")),
+                     body_for(start, dtype == 0, str(event.get("LOCATION", "")), now)],
+                    check=False,
+                )
+                sent[key] = due.isoformat()
+
+    cutoff = now - KEEP
+    sent = {k: v for k, v in sent.items() if dt.datetime.fromisoformat(v) > cutoff}
+    save_sent(sent)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,81 @@
+# Calendars that vdirsyncer keeps in ~/.local/share/calendars.
+# DMS's calendar card reads events through khal too.
+
+[calendars]
+
+[[portal]]
+path = ~/.local/share/calendars/portal/
+readonly = True
+color = '#f9e2af'
+
+[[warg]]
+path = ~/.local/share/calendars/warg/
+readonly = True
+color = '#cba6f7'
+
+# One calendar per Google calendar, named as in Google. All of them are green;
+# vdirsyncer only copies the names, since a synced color would win over this.
+[[google]]
+path = ~/.local/share/calendars/google/*
+type = discover
+color = '#a6e3a1'
+
+[locale]
+timeformat = %H:%M
+dateformat = %Y-%m-%d
+longdateformat = %Y-%m-%d
+datetimeformat = %Y-%m-%d %H:%M
+longdatetimeformat = %Y-%m-%d %H:%M
+
+[view]
+# Time and title only. The description, like the course name on Portal
+# events, shows when an event is selected.
+agenda_event_format = '{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{alarm-symbol}{reset}'
+
+# ikhal in Catppuccin Mocha, mauve accent. No backgrounds except on focus and
+# selection, so the terminal's own Mocha base shows through. Each entry is
+# fg, bg, mono, fg_high, bg_high; ikhal runs in truecolor, so only the last two
+# matter here.
+#
+#   text     #cdd6f4   subtext0 #a6adc8   overlay1 #7f849c   overlay0 #6c7086
+#   surface2 #585b70   surface1 #45475a   surface0 #313244
+#   mantle   #181825   crust    #11111b
+#   mauve    #cba6f7   lavender #b4befe   green    #a6e3a1   red      #f38ba8
+[palette]
+header = '', '', '', '#cdd6f4', '#181825'
+footer = '', '', '', '#a6adc8', '#181825'
+line header = '', '', 'bold', '#b4befe', ''
+alt header = '', '', 'bold', '#cdd6f4', ''
+bright = '', '', 'bold', '#cba6f7', ''
+caption = '', '', 'bold', '#cdd6f4', ''
+
+list = '', '', '', '#cdd6f4', ''
+list focused = '', '', 'bold', '#11111b', '#cba6f7'
+reveal focus = '', '', '', '#cdd6f4', '#313244'
+
+dayname = '', '', '', '#7f849c', ''
+monthname = '', '', '', '#7f849c', ''
+weeknumber_right = '', '', '', '#6c7086', ''
+today = '', '', 'bold', '#cba6f7', '#313244'
+today focus = '', '', 'bold', '#11111b', '#cba6f7'
+mark = '', '', '', '#11111b', '#a6e3a1'
+
+date header = '', '', '', '#a6adc8', ''
+date header focused = '', '', 'bold', '#11111b', '#b4befe'
+date header selected = '', '', '', '#cdd6f4', '#313244'
+
+edit = '', '', '', '#cdd6f4', '#313244'
+edit focus = '', '', 'bold', '#cdd6f4', '#45475a'
+editbx = '', '', '', '#cdd6f4', '#313244'
+editcp = '', '', '', '#11111b', '#cba6f7'
+button = '', '', '', '#cdd6f4', '#313244'
+button focused = '', '', 'bold', '#11111b', '#cba6f7'
+
+popupbg = '', '', '', '#cdd6f4', '#181825'
+popupper = '', '', '', '#cdd6f4', '#313244'
+alert = '', '', 'bold', '#11111b', '#f38ba8'
+
+frame = '', '', '', '#585b70', ''
+frame focus = '', '', '', '#cba6f7', ''
+frame focus color = '', '', '', '#cba6f7', ''
+frame focus top = '', '', '', '#cba6f7', ''
