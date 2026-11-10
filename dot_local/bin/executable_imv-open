@@ -1,0 +1,9 @@
+#!/bin/sh
+# Open files in imv, or browse ~/Pictures when given none.
+# usage: imv-open [file...]
+#
+# Bare imv reads paths from stdin, so a launch with no files would hang with
+# no window. The launcher's imv entry runs this instead.
+
+[ $# -eq 0 ] && set -- "${XDG_PICTURES_DIR:-$HOME/Pictures}"
+exec imv "$@"

@@ -1,0 +1,18 @@
+[options]
+# Shrink big images to fit, but leave small ones at their real size
+scaling_mode = shrink
+loop_input = true
+
+# Catppuccin Mocha, mauve accent
+background = 1e1e2e
+overlay_font = JetBrainsMono Nerd Font:12
+overlay_text_color = cdd6f4
+overlay_background_color = 11111b
+overlay_background_alpha = e6
+overlay_position_bottom = true
+overlay_text = [$imv_current_index/$imv_file_count] $(basename "$imv_current_file")  ${imv_width}x${imv_height}  ${imv_scale}%
+title_text = imv - $(basename "$imv_current_file")
+
+[binds]
+# Copy the image to the clipboard
+y = exec wl-copy < "$imv_current_file"
