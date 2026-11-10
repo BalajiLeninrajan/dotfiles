@@ -199,7 +199,7 @@
       "shadowIntensity": 0,
       "widgetOutlineEnabled": false,
       "shadowOpacity": 60,
-      "widgetPadding": 10,
+      "widgetPadding": 8,
       "hoverPopouts": true,
       "barInsetPadding": 5,
       "attachToScreenEdge": true,
@@ -320,7 +320,7 @@
       "shadowIntensity": 0,
       "widgetOutlineEnabled": false,
       "shadowOpacity": 60,
-      "widgetPadding": 10,
+      "widgetPadding": 8,
       "hoverPopouts": true,
       "barInsetPadding": 5,
       "attachToScreenEdge": false,
@@ -380,6 +380,7 @@
       "showOnLastDisplay": true,
       "position": 2,
       "mode": "taskbar",
+      "middleClickAction": "close",
       "taskbarAlign": "end",
       "widgetExpansion": "popout",
       "iconSize": 40,
@@ -836,5 +837,38 @@
   "notificationCompactMode": true,
   "notificationShowTimeoutBar": true,
   "notificationAnimationDuration": 62,
-  "greeterFollowLockScreen": true
+  "greeterFollowLockScreen": true,
+  "interfaceStyle": "expressive",
+  "density": "comfortable",
+  "dashCards": [
+    {
+      "id": "clock",
+      "w": 2,
+      "h": 1,
+      "col": 0,
+      "row": 0
+    },
+    {
+      "id": "weather",
+      "w": 1,
+      "h": 1,
+      "col": 2,
+      "row": 0
+    },
+    {
+      "id": "notifications",
+      "w": 3,
+      "h": 5,
+      "col": 3,
+      "row": 0
+    },
+    {
+      "id": "calendar",
+      "w": 3,
+      "h": 4,
+      "col": 0,
+      "row": 1
+    }
+  ],
+  "calendarBackend": "khal"
 }
