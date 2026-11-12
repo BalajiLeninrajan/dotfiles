@@ -11,7 +11,8 @@ description: >
 A dark-only, CSS-only design system in Catppuccin Mocha with neumorphic depth.
 The full list of recipes, utilities, tokens, and live examples is the docs
 site: https://catppuccin-neu.balajileninrajan.dev. Check it before writing any
-CSS. `node_modules/catppuccin-neu/SPEC.md` has every rule and number.
+CSS. `node_modules/catppuccin-neu/SPEC.md` has the rules and a compact list
+of recipe classes.
 
 ## How to use it
 
@@ -20,18 +21,18 @@ CSS. `node_modules/catppuccin-neu/SPEC.md` has every rule and number.
      `import "catppuccin-neu/css/index.css"` at the root.
    - No `package.json`: link
      `https://cdn.jsdelivr.net/gh/BalajiLeninrajan/catppuccin-neu@vX.Y.Z/css/index.css`.
-   - Pin a full tag. Add the Google Fonts link (IBM Plex Sans, JetBrains Mono) to
+   - Pin a full tag. Add the Google Fonts link (Inter, JetBrains Mono) to
      every page.
 2. Build from recipes (`btn btn-primary`, `panel`, `well`, `field`,
-   `table-neu`, `chip-tone`, `modal`, `drawer`, `toast`) and compose `cn-*`
+   `data-table`, `chip`, `tag`, `modal`, `drawer`, `toast`) and compose `cn-*`
    utilities on top for layout, spacing, type, color, and depth. Utilities
    beat recipes, and your own unlayered CSS beats both, so `!important` is
    never needed.
 3. Re-key a subtree with the contract props: `--accent`, `--tone`
-   (`cn-tone-*`), `--hard-offset`, `--hard-offset-color`. Set density once on
-   an ancestor: `data-density="compact"` for forms, `"dense"` for tables.
+   (`cn-tone-*`), `--hard-offset`, `--plate`. Set density once on an ancestor with
+   `data-density="compact"`.
 4. Wrap the page as `body.app-shell` > `header.topbar` + `main.page-main` +
-   `footer.footer-neu`. Prefer `dialog.modal` / `dialog.drawer` for overlays.
+   `footer.page-footer`. Prefer `dialog.modal` / `dialog.drawer` for overlays.
 5. Write custom CSS only for what no class expresses (a bespoke animation, a
    one-off layout). Prefix it, keep it unlayered, use tokens, and say that it
    looks like a package gap if it restates a recipe.
