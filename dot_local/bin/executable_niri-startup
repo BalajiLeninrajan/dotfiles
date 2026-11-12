@@ -1,5 +1,5 @@
 #!/bin/sh
-# Lay out workspace 1 at login. Two stacked columns:
+# Lay out workspace 1 at login. Two tabbed columns:
 #   discordo | aerc
 #   iamb     | ikhal
 #
@@ -25,10 +25,12 @@ wait_for() {
 
 column() {
     "$term_app" "$1" &
-    wait_for "$1" >/dev/null || return
+    top=$(wait_for "$1") || return
     "$term_app" "$2" &
     bottom=$(wait_for "$2") || return
     niri msg action consume-or-expel-window-left --id "$bottom"
+    niri msg action focus-window --id "$top"
+    niri msg action set-column-display tabbed
 }
 
 niri msg action focus-workspace 1

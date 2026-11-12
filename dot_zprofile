@@ -1,0 +1,8 @@
+# niri-session starts a login zsh and imports its environment into the
+# systemd user session, so this (not .zshrc) is what PATH desktop apps and
+# spawn-at-startup see.
+export PATH="$HOME/.local/bin:$PATH"
+
+# >>> coursier install directory >>>
+export PATH="$PATH:/home/balaji/.local/share/coursier/bin"
+# <<< coursier install directory <<<
