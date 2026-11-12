@@ -15,4 +15,7 @@ if [ -n "$win" ]; then
     exec niri msg action focus-window --id "$win"
 fi
 
-exec ghostty --class="$id" --gtk-single-instance=false -e "$@"
+# The main Ghostty config sends ESC CR for shift+enter, which the app reads as
+# alt+enter. Unbind it here so the app gets a real shift+enter.
+exec ghostty --class="$id" --gtk-single-instance=false \
+    --keybind=shift+enter=unbind -e "$@"
