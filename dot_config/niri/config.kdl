@@ -164,8 +164,7 @@ environment {
   XDG_CURRENT_DESKTOP "niri"
 }
 spawn-at-startup "fcitx5" "-d" "--replace"
-spawn-sh-at-startup "~/.local/bin/term-app iamb"
-spawn-sh-at-startup "~/.local/bin/term-app discordo"
+spawn-sh-at-startup "~/.local/bin/niri-startup"
 hotkey-overlay {
     skip-at-startup
 }

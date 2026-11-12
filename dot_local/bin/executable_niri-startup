@@ -1,0 +1,37 @@
+#!/bin/sh
+# Lay out workspace 1 at login. Two stacked columns:
+#   discordo | aerc
+#   iamb     | ikhal
+#
+# New windows open in a column right of the focused one, so each second app
+# spawns as its own column, then moves left into the column before it.
+
+term_app="$HOME/.local/bin/term-app"
+
+# Print the id of the window with app-id com.mitchellh.ghostty.$1 once it
+# appears. Gives up after 10 seconds.
+wait_for() {
+    i=0
+    while [ "$i" -lt 100 ]; do
+        id=$(niri msg -j windows 2>/dev/null |
+            jq -r --arg id "com.mitchellh.ghostty.$1" \
+                'first(.[] | select(.app_id == $id) | .id) // empty')
+        [ -n "$id" ] && { echo "$id"; return 0; }
+        i=$((i + 1))
+        sleep 0.1
+    done
+    return 1
+}
+
+column() {
+    "$term_app" "$1" &
+    wait_for "$1" >/dev/null || return
+    "$term_app" "$2" &
+    bottom=$(wait_for "$2") || return
+    niri msg action consume-or-expel-window-left --id "$bottom"
+}
+
+niri msg action focus-workspace 1
+column discordo iamb
+column aerc ikhal
+niri msg action focus-column-first
