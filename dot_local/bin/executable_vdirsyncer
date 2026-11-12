@@ -1,0 +1,45 @@
+#!/usr/bin/python3 -sP
+"""vdirsyncer, with a fix for hrefs that contain an encoded slash.
+
+Google names an event's CalDAV resource after its UID. LettuceMeet invites
+use a URL as the UID, so Google lists them as ".../events/https%3A%2F%2F
+lettucemeet.com%2Fl%2F45m53.ics". vdirsyncer's _normalize_href decodes the
+whole path and quotes it again with "/" left alone, which turns each %2F into
+a real slash and names a resource that doesn't exist. Google answers that
+multiget with no properties, and vdirsyncer drops the whole calendar.
+
+This version decodes and re-quotes one path segment at a time, so an encoded
+slash stays encoded. Upstream (0.20.0) has the same code; drop this wrapper
+once it's fixed there.
+
+-P keeps this file's directory off sys.path, or "import vdirsyncer" would
+import this script.
+"""
+
+import sys
+import urllib.parse as urlparse
+
+from vdirsyncer.storage import dav
+
+
+def _normalize_href(base, href):
+    orig_href = href
+    if not href:
+        raise ValueError(href)
+
+    x = urlparse.urljoin(base, href)
+    x = urlparse.urlsplit(x).path
+    x = "/".join(urlparse.quote(urlparse.unquote(s), "@") for s in x.split("/"))
+
+    if orig_href == x:
+        dav.dav_logger.debug(f"Already normalized: {x!r}")
+    else:
+        dav.dav_logger.debug(f"Normalized URL from {orig_href!r} to {x!r}")
+    return x
+
+
+dav._normalize_href = _normalize_href
+
+from vdirsyncer.cli import app  # noqa: E402
+
+sys.exit(app())

@@ -13,11 +13,9 @@ path = ~/.local/share/calendars/warg/
 readonly = True
 color = '#cba6f7'
 
-# One calendar per Google calendar, named as in Google. All of them are green;
-# vdirsyncer only copies the names, since a synced color would win over this.
+# Main Google calendar, read and write.
 [[google]]
-path = ~/.local/share/calendars/google/*
-type = discover
+path = ~/.local/share/calendars/google/bleninrajan@gmail.com/
 color = '#a6e3a1'
 
 [locale]

@@ -36,13 +36,12 @@ type = "filesystem"
 path = "~/.local/share/calendars/warg/"
 fileext = ".ics"
 
-# Personal Google calendars, read and write.
+# Main Google calendar only, read and write. The account's other calendars
+# (scrapes, tests, holidays) stay out of khal.
 [pair google]
 a = "google_remote"
 b = "google_local"
-collections = ["from a"]
-# Only the names: a color file would beat the green set in the khal config.
-metadata = ["displayname"]
+collections = ["bleninrajan@gmail.com"]
 
 [storage google_remote]
 type = "google_calendar"
