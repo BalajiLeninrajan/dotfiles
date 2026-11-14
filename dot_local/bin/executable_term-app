@@ -15,6 +15,10 @@ if [ -n "$win" ]; then
     exec niri msg action focus-window --id "$win"
 fi
 
+# Apps started from the desktop never source .zshrc, so they miss its EDITOR
+# and fall back to nano.
+export EDITOR=nvim VISUAL=nvim
+
 # The main Ghostty config sends ESC CR for shift+enter, which the app reads as
 # alt+enter. Unbind it here so the app gets a real shift+enter.
 exec ghostty --class="$id" --gtk-single-instance=false \
