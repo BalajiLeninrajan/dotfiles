@@ -16,15 +16,16 @@ tab.selected.bold=true
 border.fg=#11111b
 border.bold=true
 
+msglist_unread.fg=#89b4fa
 msglist_unread.bold=true
 msglist_flagged.fg=#f9e2af
 msglist_flagged.bold=true
-msglist_result.fg=#89b4fa
+msglist_result.fg=#94e2d5
 msglist_result.bold=true
-msglist_*.selected.bold=true
 msglist_*.selected.bg=#313244
 
-dirlist_*.selected.bold=true
+dirlist_unread.fg=#89b4fa
+dirlist_unread.bold=true
 dirlist_*.selected.bg=#313244
 
 statusline_default.fg=#9399b2
