@@ -8,7 +8,8 @@ README.md
 {{- $student := or (hasSuffix "student.cs.uwaterloo.ca" .chezmoi.fqdnHostname) (regexMatch "^/u[0-9]+/" .chezmoi.homeDir) }}
 
 {{/* wintermute is a Linux desktop that also hosts agents over Tailscale.
-     It takes the normal Linux branch below and adds the herdr server unit. */}}
+     It takes the normal Linux branch below and adds a unit that starts the
+     herdr-core server at boot. */}}
 {{- $devbox := eq .chezmoi.hostname "wintermute" }}
 
 {{ if $student }}
@@ -84,7 +85,7 @@ Library
 Library/Application Support/vesktop
 {{ end }}
 
-{{/* Everywhere else the herdr client starts the server on demand. */}}
+{{/* Everywhere else herdr-app and hc start the core on demand. */}}
 {{ if not $devbox }}
 .config/systemd/user/herdr-server.service
 {{ end }}

@@ -43,7 +43,7 @@ UW student.cs login nodes, matched on a `.student.cs.uwaterloo.ca` FQDN:
 wintermute, a Linux desktop that also hosts agents over Tailscale, matched on hostname:
 
 - The full Linux desktop config, same as any other Linux machine
-- `herdr-server.service` keeps the herdr server up from boot, so `herdr --remote wintermute` always has a session to attach to. Other machines skip it, since the herdr client starts the server on demand
+- `herdr-server.service` starts the herdr-core server at boot, so herdr-app and `ssh wintermute hc connect` always have a core to attach to. Other machines skip it, since herdr-app and `hc` start the core on demand
 
 The prompt is the `simple` theme everywhere. In an ssh session it also puts the
 hostname on the right, so a remote shell is obvious and, on student.cs, so is
@@ -97,8 +97,10 @@ systemctl --user enable --now herdr-server.service
 
 herdr writes `~/.claude/hooks/herdr-agent-state.sh` itself, so the
 integration install is what makes the SessionStart hook in `settings.json`
-work. Linger starts the user manager at boot, so the server runs without a
-login.
+work. Linger starts the user manager at boot, so the core runs without a
+login. The unit only runs `herdr-core server start`, which is a no-op when the
+core is already up; herdr-core keeps the server in its own `hc-serve-*` unit,
+so `hc server restart` and `hc update` work the same as anywhere else.
 
 Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in three places:
 
