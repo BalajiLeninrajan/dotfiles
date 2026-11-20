@@ -20,6 +20,13 @@ Check my ~/.zshrc for PATHs and some context on the local environment
 - In tool calls, prefer setting `workdir` directly instead of changing directories
 - Always use `eza` instead of `ls`
 
+## Machines
+
+- shodan is my main machine. wintermute is a Linux box on Tailscale that stays on for long jobs and agents. Both run herdr-core, and wintermute's core starts at boot.
+- For work on another machine, use herdr-core's CLI, `hc`. Run `hc --skill` once per session before using it; that prints the manual for the installed version. `hc` is not the older `herdr` CLI, and the `herdr` skill doesn't apply to it.
+- `hc exec --on wintermute <cmd>` runs a short command, `hc run --bg --on wintermute` runs anything long or an agent, and `hc file read|edit|write --on wintermute` touches remote files. Your own file tools only see the local machine.
+- Ask before rebooting wintermute, stopping its core, or killing terminals you didn't start.
+
 ## Git usage
 
 - Never give me a branch name without pushing it first

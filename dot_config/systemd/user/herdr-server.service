@@ -1,0 +1,15 @@
+[Unit]
+Description=Start the herdr-core server at boot
+Documentation=https://herdr.dev
+
+[Service]
+# herdr-core runs its server in a transient unit of its own (hc-serve-*), the
+# same way it does when herdr-app or `hc connect` starts it on demand. This
+# unit only triggers that at boot. `server start` is a no-op when the core is
+# already up.
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=%h/.local/bin/herdr-core server start
+
+[Install]
+WantedBy=default.target

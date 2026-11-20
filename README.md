@@ -40,6 +40,11 @@ UW student.cs login nodes, matched on a `.student.cs.uwaterloo.ca` FQDN:
 - Hadoop, Spark, and the dnf plugin drop out of `.zshrc`, since the `/opt` paths and the package manager they assume are not there
 - The Claude Code SessionStart hook drops out of `settings.json`, because it drives the herdr status line
 
+wintermute, a Linux desktop that also hosts agents over Tailscale, matched on hostname:
+
+- The full Linux desktop config, same as any other Linux machine
+- `herdr-server.service` starts the herdr-core server at boot, so herdr-app and `ssh wintermute hc connect` always have a core to attach to. Other machines skip it, since herdr-app and `hc` start the core on demand
+
 The prompt is the `simple` theme everywhere. In an ssh session it also puts the
 hostname on the right, so a remote shell is obvious and, on student.cs, so is
 which node the load balancer picked.
@@ -77,6 +82,25 @@ ship: ripgrep, fd, bat, zoxide, and delta as static musl binaries under
 `~/.local/bin`, oh-my-zsh with zsh-autosuggestions and zsh-syntax-highlighting,
 and a rebuilt bat theme cache. Versions are pinned with the tarball checksum.
 eza, fzf, Neovim, tmux, git, btop, go, rust, and uv are already on the machine.
+
+### wintermute
+
+Set the hostname to `wintermute` before the first apply, or chezmoi skips
+`herdr-server.service`.
+
+```sh
+chezmoi init --apply BalajiLeninrajan/dotfiles
+herdr integration install claude
+loginctl enable-linger "$USER"
+systemctl --user enable --now herdr-server.service
+```
+
+herdr writes `~/.claude/hooks/herdr-agent-state.sh` itself, so the
+integration install is what makes the SessionStart hook in `settings.json`
+work. Linger starts the user manager at boot, so the core runs without a
+login. The unit only runs `herdr-core server start`, which is a no-op when the
+core is already up; herdr-core keeps the server in its own `hc-serve-*` unit,
+so `hc server restart` and `hc update` work the same as anywhere else.
 
 Kanata ships one layout for both platforms. `dot_config/kanata/config.kbd.tmpl` differs by OS in three places:
 
