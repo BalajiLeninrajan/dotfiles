@@ -1,0 +1,5 @@
+button 1 default MOVE_MOUSE
+button 2 default BACK
+button 3 default MENU_MOUSE
+button 1 anchor COMMAND "MOVE_MOUSE; EXTERN_LINK; DISPLAY_IMAGE"
+button 1 active COMMAND "EXTERN_LINK; DISPLAY_IMAGE"
