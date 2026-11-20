@@ -40,10 +40,9 @@ UW student.cs login nodes, matched on a `.student.cs.uwaterloo.ca` FQDN:
 - Hadoop, Spark, and the dnf plugin drop out of `.zshrc`, since the `/opt` paths and the package manager they assume are not there
 - The Claude Code SessionStart hook drops out of `settings.json`, because it drives the herdr status line
 
-wintermute, a Linux dev box reached over Tailscale, matched on hostname:
+wintermute, a Linux desktop that also hosts agents over Tailscale, matched on hostname:
 
-- Shell, CLI, and agent config, plus herdr
-- Every desktop config is ignored, like on student.cs. The only display there is the one Chrome draws on for browser agents
+- The full Linux desktop config, same as any other Linux machine
 - `herdr-server.service` keeps the herdr server up from boot, so `herdr --remote wintermute` always has a session to attach to. Other machines skip it, since the herdr client starts the server on demand
 
 The prompt is the `simple` theme everywhere. In an ssh session it also puts the
@@ -86,8 +85,8 @@ eza, fzf, Neovim, tmux, git, btop, go, rust, and uv are already on the machine.
 
 ### wintermute
 
-Set the hostname to `wintermute` before the first apply, or chezmoi takes the
-desktop Linux branch.
+Set the hostname to `wintermute` before the first apply, or chezmoi skips
+`herdr-server.service`.
 
 ```sh
 chezmoi init --apply BalajiLeninrajan/dotfiles
