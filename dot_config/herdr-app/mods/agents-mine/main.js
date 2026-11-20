@@ -3,7 +3,7 @@
 
 import { View, div, image, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { agents, terminals, panes, focused, spaces, run, theme, shared, setShared, setAgentOrder, openOverlay, closeOverlay, props, window, layout } from "herdr";
+import { agents, terminals, panes, focused, spaces, run, theme, shared, setShared, setAgentOrder, openOverlay, closeOverlay, props, layout } from "herdr";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -14,17 +14,9 @@ function find(node, id) {
   return null;
 }
 
-// The sidebar's rail goes by its width, not a flag: dragging its edge narrows it too.
+// Under 160px the sidebar is a rail. The spaces mod draws the whole rail, agents
+// included, and hides this block while it lasts.
 const narrow = () => (find(layout(), "sidebar")?.size?.px ?? Infinity) < 160;
-
-// To the rail (on macOS wide enough for the traffic lights), or back to the width it had.
-function toggleSidebar() {
-  const width = find(layout(), "sidebar")?.size?.px;
-  if (!narrow()) setShared("sidebar.width", width);
-  // Mods edited before the rail went by width still read the flag.
-  setShared("sidebar.collapsed", !narrow());
-  run("layout.resize", { id: "sidebar", px: narrow() ? (shared("sidebar.width") ?? 268) : window()?.platform === "macos" ? 76 : 44 });
-}
 
 const clean = (s) => (s ?? "").replace(/^[^\p{L}\p{N}]+/u, "").trim();
 
@@ -233,9 +225,11 @@ export default class Agents extends View {
     const now = Date.now();
     this.track(list, now);
     this.hold(list);
+    // Blank for the moment before the spaces mod hides this block.
+    if (collapsed) return div().size_full().bg(t.chrome);
     // A kept sub-agent (one with a pane) is in agents() too: where a tree shows
     // it, it gets no row of its own, unless it's pinned.
-    const nested = new Set(collapsed ? [] : list.flatMap((a) => this.tree(all, a.address).map((s) => s.t.address)));
+    const nested = new Set(list.flatMap((a) => this.tree(all, a.address).map((s) => s.t.address)));
     list = list.filter((a) => a.pinned || !nested.has(a.address));
     const tabCounts = new Map();
     for (const a of list) tabCounts.set(a.tab, (tabCounts.get(a.tab) ?? 0) + 1);
@@ -249,7 +243,7 @@ export default class Agents extends View {
     setAgentOrder(list.map((a) => a.address));
 
     const withKids = (a, i) => {
-      const subs = collapsed ? [] : this.tree(all, a.address);
+      const subs = this.tree(all, a.address);
       const r = row(a, i, subs);
       if (this.folded.has(a.address)) return [r];
       return [r, ...subs.map((s) => this.subRow(t, s, shown, byPriority))];
@@ -305,21 +299,6 @@ export default class Agents extends View {
     const row = (a, i, subs = []) => {
       const pic = icon(a.program, 16, t.foreground);
       const more = detail.get(a.address);
-      if (collapsed) {
-        return h_flex()
-          .id(`ag-${a.address}`)
-          .h(26)
-          .flex_none()
-          .items_center()
-          .justify_center()
-          .gap(4)
-          // The rail marks the agent on screen the way the spaces rail marks its space.
-          .when(a.focused, (el) => el.bg(t.raised))
-          .hover((s) => s.bg(t.hover))
-          .on_click(() => run("pane.focus", { pane: a.pane }))
-          .child(div().flex_none().whitespace_nowrap().text_color(a.focused ? t.foreground : t.muted).child(String(i + 1)))
-          .child(h_flex().w(14).flex_none().items_center().justify_center().child(this.status(t, a, true)));
-      }
       const when = this.since(a);
       const idle = a.status === "idle" && !a.focused;
       const isPinned = a.pinned;
@@ -417,9 +396,7 @@ export default class Agents extends View {
           .when(!byPriority && top && top !== "idle", (el) => el.child(this.status(t, { status: top }, true)))
           .child(svg("mods/workspace-chrome/chevron-right.svg").size(11).flex_none().text_color(t.dim)));
     };
-    const rows = collapsed
-      ? list.flatMap(withKids)
-      : groups.flatMap((g) => [header(g), ...(this.folded.has(g.id) ? [] : g.members.flatMap(withKids))]);
+    const rows = groups.flatMap((g) => [header(g), ...(this.folded.has(g.id) ? [] : g.members.flatMap(withKids))]);
 
     return v_flex()
       .size_full()
@@ -428,49 +405,30 @@ export default class Agents extends View {
       .border_t(1)
       .border_color(t.border)
       .text_size(13)
-      .when(!collapsed, (el) =>
-        el.child(
-          h_flex()
-            .px(16)
-            .h(41)
-            .pt(14)
-            .pb(5)
-            .flex_none()
-            .items_center()
-            .justify_between()
-            .child(div().text_size(11.5).font_medium().text_color(t.dim).child("Agents"))
-            .child(
-              div()
-                .id("ag-sort")
-                .text_size(11)
-                .text_color(t.dim)
-                .hover((s) => s.text_color(t.foreground))
-                .on_click(() => openOverlay({ mod: "agents", kind: "popup", width: 200, height: 140, props: { sortMenu: true } }))
-                .tooltip(`Sort agents: ${sort.label}`)
-                .child(svg(`mods/workspace-chrome/${sort.icon}.svg`).size(14)),
-            ),
-        ),
+      .child(
+        h_flex()
+          .px(16)
+          .h(41)
+          .pt(14)
+          .pb(5)
+          .flex_none()
+          .items_center()
+          .justify_between()
+          .child(div().text_size(11.5).font_medium().text_color(t.dim).child("Agents"))
+          .child(
+            div()
+              .id("ag-sort")
+              .text_size(11)
+              .text_color(t.dim)
+              .hover((s) => s.text_color(t.foreground))
+              .on_click(() => openOverlay({ mod: "agents", kind: "popup", width: 200, height: 140, props: { sortMenu: true } }))
+              .tooltip(`Sort agents: ${sort.label}`)
+              .child(svg(`mods/workspace-chrome/${sort.icon}.svg`).size(14)),
+          ),
       )
-      .when(list.length === 0 && !collapsed, (el) =>
+      .when(list.length === 0, (el) =>
         el.child(div().px(12).text_size(12).text_color(t.dim).child("No agent status yet. Agents show up here when they report their status. Older versions and agents inside tmux may not.")),
       )
-      .child(v_flex().id("ag-list").flex_1().min_h(0).px(8).overflow_y_scrollbar().mode("always").children(rows))
-      .when(collapsed, (el) =>
-        el.child(
-          h_flex()
-            .h(28)
-            .items_center()
-            .justify_center()
-            .child(
-              div()
-                .id("collapse")
-                .text_size(13)
-                .text_color(t.dim)
-                .hover((s) => s.text_color(t.foreground))
-                .on_click(toggleSidebar)
-                .child("»"),
-            ),
-        ),
-      );
+      .child(v_flex().id("ag-list").flex_1().min_h(0).px(8).overflow_y_scrollbar().mode("always").children(rows));
   }
 }
