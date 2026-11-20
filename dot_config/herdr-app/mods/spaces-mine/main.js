@@ -5,7 +5,8 @@
 
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { spaces, machines, panes, run, openOverlay, exec, hc, theme, shared, setShared, watchFolder, window, layout } from "herdr";
+import { spaces, machines, panes, agents, run, openOverlay, exec, hc, theme, shared, setShared, setAgentOrder, watchFolder, window, layout } from "herdr";
+import { ROW, AGENT_ROW, ADD_ROW, SECTION_HEAD, SECTION_GAP, MACHINE_LABEL, MACHINE_GAP, MACHINE_FIRST, spaceRow, agentRow, addRow, spacesHead, agentsHead, machineLabel, machineRule, machineLead } from "./rail.js";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -18,6 +19,12 @@ function find(node, id) {
 
 // The sidebar's rail goes by its width, not a flag: dragging its edge narrows it too.
 const narrow = () => (find(layout(), "sidebar")?.size?.px ?? Infinity) < 160;
+
+// Back from the rail to the width the sidebar had.
+function expandSidebar() {
+  setShared("sidebar.collapsed", false);
+  run("layout.resize", { id: "sidebar", px: shared("sidebar.width") ?? 268 });
+}
 
 // Where a space is now: its first terminal's live folder, else where it was made.
 // `ps`: panes(), read once by the caller (each read copies every pane).
@@ -35,9 +42,16 @@ const FALLBACK = 60000;
 // What a stored color name looks like on an avatar (the same in every mod
 // that draws space avatars): one strong color per hue, light and dark alike.
 const MARK = { ansi6: "#22a99a", ansi3: "#e3814f", ansi4: "#5b8def", ansi5: "#8b7cf6", ansi2: "#3fae6a", ansi1: "#d9649a" };
-// catppuccin-neu's --cn-series-1..6: teal, yellow, mauve, peach, then blue and
-// pink 70% into base in oklab. New spaces take the least-used, in this order.
-const SERIES = ["#94e2d5", "#f9e2af", "#cba6f7", "#fab387", "#6783b7", "#ae8cab"];
+// Catppuccin's teal, green, lavender, rosewater and pink. None is a status
+// color (yellow working, red blocked, blue done) or the mauve accent, so a
+// tile's color never reads as a state. New spaces take the least-used, in this order.
+const SERIES = ["#94e2d5", "#a6e3a1", "#b4befe", "#f5e0dc", "#f5c2e7"];
+// The home space takes no color from the series: its tile is gray (overlay2).
+const HOME = "#9399b2";
+// A machine's name for the rail: its first three letters or digits, in capitals
+// ("wintermute" is "WIN", "build-box-2" is "BUI").
+const abbr = (name) => [...name.replace(/[^\p{L}\p{N}]+/gu, "")].slice(0, 3).join("").toUpperCase();
+const RANK = { blocked: 4, done: 3, working: 2, idle: 1 };
 
 // A space speaks up only when something in it needs you.
 export function glyph(status) {
@@ -314,17 +328,32 @@ export default class Spaces extends View {
       return layout === "loading" || (!layout && this.machines.some(k => k.name === m && k.state === "connected"))
         || spaces().some(s => (s.machine ?? null) === m && !this.shown.has(s.id));
     };
-    const loadingRow = m => div().id(`machine-loading-${m ?? "local"}`).h(28).flex_none().px(8).text_size(12).text_color(t.dim).child(collapsed ? "…" : "Loading…");
-    if (!remote.length) return loading(null) && !rows.length ? [loadingRow(null)] : rows.map(draw);
+    const loadingRow = m => div().id(`machine-loading-${m ?? "local"}`).h(28).flex_none().px(8).text_size(12).text_color(t.dim).when(collapsed, el => el.px(0).flex().justify_center()).child(collapsed ? "…" : "Loading…");
+    // The rail always names the machine: its rows are bare numbers otherwise.
+    if (!remote.length && !collapsed) return loading(null) && !rows.length ? [loadingRow(null)] : rows.map(draw);
     const machineNames = [null, ...remote];
-    return machineNames.flatMap((m) => {
+    return machineNames.flatMap((m, n) => {
       const mine = rows.filter((r) => (r.w.machine ?? null) === m);
       const repair = this.reconnecting[m];
       const machine = this.machines.find(k => k.name === m) ?? repair?.machine;
       const connected = !m || machine?.state === "connected";
       const rebuilt = this.rebuilt(machine) || !!repair;
       const folded = this.folded.has(m);
-      const head = h_flex().id(`machine-${m ?? "local"}`).h(26).flex_none().px(collapsed ? 2 : 8).gap(7).items_center().text_size(11).text_color(t.dim)
+      const title = m ?? this.hostname ?? "This computer";
+      // On the rail: a short caption, the full name in the tooltip.
+      const short = abbr(m ?? this.hostname ?? "");
+      const railHead = h_flex().id(`machine-${m ?? "local"}`).pb(2).flex_none().items_center().justify_center()
+        .when(!connected || folded, el => el.opacity(0.55)).cursor_pointer()
+        .tooltip(connected ? `${title} \u00b7 ${m ? "machine" : "this computer"}${folded ? " (folded)" : ""}` : `${title} (${(machine?.state ?? "asleep").replace(/_/g, " ")})`)
+        .on_click((_e, cx) => {
+          folded ? this.folded.delete(m) : this.folded.add(m);
+          localStorage.setItem("machines.folded", JSON.stringify([...this.folded]));
+          cx.notify();
+        })
+        .child(machineLabel(t, `machine-label-${m ?? "local"}`, short || "\u00b7"));
+      // Folded on the rail, an ellipsis stands where the rows were.
+      const foldedRow = div().id(`machine-folded-${m ?? "local"}`).h(14).flex_none().flex().items_center().justify_center().text_size(11).text_color(t.dim).child("\u22ef");
+      const head = collapsed ? railHead : h_flex().id(`machine-${m ?? "local"}`).h(26).flex_none().px(8).gap(7).items_center().text_size(11).text_color(t.dim)
         .cursor_pointer().hover(s => s.bg(t.hover))
         .on_click((_e, cx) => {
           folded ? this.folded.delete(m) : this.folded.add(m);
@@ -348,9 +377,11 @@ export default class Spaces extends View {
       const empty = h_flex().id(`machine-new-${m ?? "local"}`).h(28).flex_none().px(8).gap(7).items_center().rounded(7)
         .text_size(12).text_color(t.dim).hover(s => s.bg(t.hover).text_color(t.foreground))
         .on_click(() => run("space.new", { machine: m ?? "" }))
-        .child(svg("mods/workspace-chrome/plus.svg").size(12)).when(!collapsed, el => el.child("New space there"));
+        .when(collapsed, el => el.px(0).justify_center().rounded(6)).child(svg("mods/workspace-chrome/plus.svg").size(12)).when(!collapsed, el => el.child("New space there"));
       if (!collapsed && rebuilt) return [head];
-      return [head, ...(folded ? [] : mine.length ? mine.map(draw) : [loading(m) ? loadingRow(m) : empty])];
+      // How tall the rail's rows come to: render() sizes the two lists from it.
+      this.railHeight += MACHINE_LABEL + 2 + (n ? MACHINE_GAP : MACHINE_FIRST) + (folded ? 14 : mine.length ? mine.length * ROW : 28);
+      return [...(collapsed ? [n ? machineRule(t) : machineLead()] : []), head, ...(folded ? (collapsed ? [foldedRow] : []) : mine.length ? mine.map(draw) : [loading(m) ? loadingRow(m) : empty])];
     });
   }
 
@@ -380,7 +411,7 @@ export default class Spaces extends View {
     const on = w.active;
     const fromIndex = this.pressed === null ? -1 : spaces().findIndex(s => s.id === this.pressed);
     const colors = shared("space.colors") ?? {};
-    const color = colors[w.id] ?? SERIES[0];
+    const color = colors[w.id] ?? HOME;
     const fill = color.startsWith("#") ? color : (MARK[color] ?? t[color]);
     return v_flex()
       .relative()
@@ -434,18 +465,39 @@ export default class Spaces extends View {
       );
   }
 
-  compact({ w, i }, t) {
-    return h_flex()
-      .id(`space-${w.id}`)
-      .h(26)
-      .flex_none()
-      .justify_center()
-      .gap(4)
-      .when(w.active, (el) => el.bg(t.raised))
-      .hover((s) => s.bg(t.hover))
+  // A rail row: the numbered tile the expanded row has, an outline for a
+  // worktree (where the expanded row has a branch), with the status of its
+  // most urgent agent on the corner.
+  compact({ w, i, tree }, t) {
+    return spaceRow(t, { w, n: i + 1, outlined: Boolean(tree) })
       .on_click(() => run("space.select", { id: w.id }))
-      .child(div().text_color(w.active ? t.foreground : t.muted).child(String(i + 1)))
-      .child(div().text_color(tone(t, w.status)).child(glyph(w.status)));
+      .on_mouse_down("right", () => this.menu(w));
+  }
+
+  // The rail's agents: pinned first, then as the agents list sorts them (most
+  // urgent first, or by space). A tooltip names the space, the tab if it has a
+  // name, and the program.
+  railAgents(t) {
+    const sp = spaces();
+    const tabs = new Map(sp.flatMap((s) => s.tabs ?? []).map((tab) => [tab.id, tab]));
+    let list = agents();
+    if ((shared("agents.sort") ?? "priority") === "priority") list = [...list].sort((x, y) => (RANK[y.status] ?? 0) - (RANK[x.status] ?? 0) || y.seq - x.seq);
+    list = [...list.filter((a) => a.pinned), ...list.filter((a) => !a.pinned)];
+    // The order agent.next walks is the order shown.
+    const order = JSON.stringify(list.map((a) => a.address));
+    if (this.agentOrder !== order) setAgentOrder(JSON.parse(this.agentOrder = order));
+    return list.map((a) => {
+      const tab = tabs.get(a.tab);
+      const tip = [a.space_name, tab?.named ? tab.name : null, a.program?.name].filter(Boolean).join(" \u00b7 ");
+      return agentRow(t, a, sp.findIndex((s) => s.id === a.space) + 1, tip);
+    });
+  }
+
+  // On the rail this block is the whole sidebar: both lists are drawn here and
+  // the agents block is hidden, so the two never split the height between them.
+  claimRail(collapsed) {
+    const block = find(layout(), "agents");
+    if (block && Boolean(block.hidden) !== collapsed) run(collapsed ? "layout.hide" : "layout.show", { id: "agents" });
   }
 
   render() {
@@ -464,15 +516,38 @@ export default class Spaces extends View {
       changed = true;
     }
     if (changed) setShared("space.colors", kept);
-    return v_flex().size_full().min_h(0).bg(t.chrome).text_size(13)
-      // On the rail the + is alone: center it instead of pushing it right.
-      .child(h_flex().h(31).pl(collapsed ? 0 : 16).pr(collapsed ? 0 : 10).items_center().justify_between().when(collapsed, el => el.justify_center()).text_size(11.5).text_color(t.dim)
-        .when(!collapsed, el => el.child("Spaces"))
-        // Expanded, new space lives in the top bar (workspace-chrome-mine).
-        .when(collapsed, el => el.child(div().id("space-new").size(26).flex_none().flex().items_center().justify_center().rounded(6).hover(s => s.bg(t.hover).text_color(t.foreground))
-          .on_click(() => run("space.new")).child(svg("mods/workspace-chrome/plus.svg").size(14)))))
-      .child(v_flex().flex_1().min_h(0).px(8).pb(14).overflow_y_scrollbar().mode("always")
-        .on_mouse_up("left", (_e, cx) => { this.pressed = null; cx.notify(); })
-        .children(this.grouped(t, collapsed)));
+    this.claimRail(collapsed);
+    this.railHeight = 0;
+    const groups = this.grouped(t, collapsed);
+    const agentRows = collapsed ? this.railAgents(t) : [];
+    // The rail is one column from the top: the spaces, then the agents right
+    // under them, one fixed gap and a divider apart. Room to spare lies under
+    // the agents, over the settings gear. Each list is as tall as its rows
+    // while both fit. With more than fit, the agents keep up to half the rail
+    // and the spaces scroll in the rest, so every agent's status stays in view.
+    const mac = window()?.platform === "macos" ? 28 : 0;
+    const room = (this.height ?? 600) - mac - (agentRows.length ? SECTION_GAP + SECTION_HEAD + 4 : 0);
+    const agentsTall = Math.min(agentRows.length * AGENT_ROW, Math.max(AGENT_ROW * 2, Math.floor(room / 2 / AGENT_ROW) * AGENT_ROW));
+    // The plus is not in the scrolling list: it is always in view under it,
+    // and a list too long for its room ends at a cut tile, not a cut plus.
+    const spacesTall = Math.max(ROW, Math.min(SECTION_HEAD + this.railHeight, room - agentsTall - ADD_ROW - 4));
+    const list = v_flex().id("spaces-list").min_h(0).px(collapsed ? 0 : 8).pb(collapsed ? 0 : 14)
+      .on_mouse_up("left", (_e, cx) => { this.pressed = null; cx.notify(); })
+      .when(collapsed, el => el.children(spacesHead(t)))
+      .children(groups);
+    return v_flex().id("spaces-root").on_size_change((size, cx) => { this.height = size.height; cx.notify(); }).size_full().min_h(0).bg(t.chrome).text_size(13)
+      // Expanded, new space lives in the top bar (workspace-chrome-mine); on the rail it is the slot after the last space.
+      .when(!collapsed, el => el.child(h_flex().h(31).pl(16).pr(10).items_center().justify_between().text_size(11.5).text_color(t.dim).child("Spaces")))
+      .when(!collapsed, el => el.child(list.flex_1().overflow_y_scrollbar().mode("always")))
+      // The rail is too narrow for a scrollbar: its lists scroll without one.
+      .when(collapsed, el => el.child(list.h(spacesTall).flex_none().overflow_y_scroll())
+        .child(addRow(t).mb(4).on_click(() => run("space.new"))))
+      .when(collapsed && agentRows.length > 0, el => el
+        .children(agentsHead(t))
+        .child(v_flex().id("rail-agents").h(agentsTall).flex_none().overflow_y_scroll().children(agentRows))
+        .child(div().flex_1().min_h(0)))
+      // The macOS rail has no room for the top bar's toggle beside the traffic lights: this unfolds it.
+      .when(collapsed && window()?.platform === "macos", el => el.child(h_flex().h(28).flex_none().items_center().justify_center()
+        .child(div().id("collapse").text_size(13).text_color(t.dim).hover((s) => s.text_color(t.foreground)).on_click(expandSidebar).child("\u00bb"))));
   }
 }
