@@ -1,0 +1,7 @@
+# Every zsh reads this, including the non-interactive one behind
+# `ssh host cmd`, which skips .zprofile and .zshrc. Without it, tools in
+# ~/.local/bin (hc, herdr-core, claude) are "command not found" over ssh.
+typeset -U path PATH
+path=("$HOME/.local/bin" "$HOME/.cargo/bin" $path)
+
+[[ -f "$HOME/.rokit/env" ]] && . "$HOME/.rokit/env"
