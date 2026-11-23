@@ -1,0 +1,16 @@
+[Unit]
+Description=Share the niri session over VNC on Tailscale
+Documentation=man:wayvnc(1)
+PartOf=graphical-session.target
+After=graphical-session.target
+Requisite=graphical-session.target
+
+[Service]
+# ~/.config/wayvnc/config binds the Tailscale address. If tailscaled is not up
+# yet at login the bind fails, so keep retrying until it is.
+ExecStart=/usr/bin/wayvnc
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

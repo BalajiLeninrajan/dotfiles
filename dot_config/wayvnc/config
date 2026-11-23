@@ -1,0 +1,6 @@
+# wintermute's Tailscale address. Only tailnet peers can reach it, and
+# Tailscale already authenticates them, so VNC auth stays off. Binding
+# 0.0.0.0 would also expose it to the LAN, since Fedora's firewalld zone
+# allows high ports.
+address=100.115.68.6
+port=5900
