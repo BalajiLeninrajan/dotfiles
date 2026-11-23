@@ -44,6 +44,7 @@ wintermute, a Linux desktop that also hosts agents over Tailscale, matched on ho
 
 - The full Linux desktop config, same as any other Linux machine
 - `herdr-server.service` starts the herdr-core server at boot, so herdr-app and `ssh wintermute hc connect` always have a core to attach to. Other machines skip it, since herdr-app and `hc` start the core on demand
+- It's a dev box with no chat, mail, or calendar accounts. `niri-startup` exits without opening discordo, aerc, iamb, or ikhal, and the vdirsyncer and khal-notify timers are skipped
 
 The prompt is the `simple` theme everywhere. In an ssh session it also puts the
 hostname on the right, so a remote shell is obvious and, on student.cs, so is

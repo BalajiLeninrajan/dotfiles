@@ -1,3 +1,9 @@
+{{- /* wintermute is a dev box with no chat, mail, or calendar accounts, so
+       it opens nothing at login. */ -}}
+{{ if eq .chezmoi.hostname "wintermute" -}}
+#!/bin/sh
+exit 0
+{{ else -}}
 #!/bin/sh
 # Lay out workspace 1 at login. Two tabbed columns:
 #   discordo | aerc
@@ -37,3 +43,4 @@ niri msg action focus-workspace 1
 column discordo iamb
 column aerc ikhal
 niri msg action focus-column-first
+{{ end -}}
