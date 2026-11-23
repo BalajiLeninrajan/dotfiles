@@ -23,7 +23,8 @@ Check my ~/.zshrc for PATHs and some context on the local environment
 ## Machines
 
 - shodan is my main machine. wintermute is a Linux box on Tailscale that stays on for long jobs and agents. Both run herdr-core, and wintermute's core starts at boot.
-- For work on another machine, use herdr-core's CLI, `hc`. Run `hc --skill` once per session before using it; that prints the manual for the installed version. `hc` is not the older `herdr` CLI, and the `herdr` skill doesn't apply to it.
+- For work on another machine, use herdr-core's CLI, `hc`. Load the `herdr-core` skill (or run `hc --skill`) once per session before using it; that prints the manual for the installed version. `hc` is not the older `herdr` CLI.
+- To change what the Herdr window shows, load the `herdr-app` skill (or run `herdr-app --skill`) first.
 - `hc exec --on wintermute <cmd>` runs a short command, `hc run --bg --on wintermute` runs anything long or an agent, and `hc file read|edit|write --on wintermute` touches remote files. Your own file tools only see the local machine.
 - Ask before rebooting wintermute, stopping its core, or killing terminals you didn't start.
 
