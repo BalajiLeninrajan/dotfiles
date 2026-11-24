@@ -526,7 +526,8 @@
       "w": 8,
       "h": 1,
       "col": 0,
-      "row": 1
+      "row": 1,
+      "deviceName": "backlight:acpi_video0"
     },
     {
       "id": "volumeSlider",
