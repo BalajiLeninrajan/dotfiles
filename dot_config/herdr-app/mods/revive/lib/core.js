@@ -685,7 +685,16 @@ export function resumeScript(rec, engine) {
   const { dropped } = attendedFlags(rec.agent, safeFlags(rec.agent, rec.flags ?? []));
   const without = dropped.length ? ` without ${dropped.join(", ")} (quit and resume it from the Revive dialog to keep ${dropped.length > 1 ? "them" : "it"})` : "";
   const note = `↻ Revive: resuming ${name} session ${shortId(rec.session)}${without}. REVIVE_AUTO=0 skips this.`;
+  const waiting = `↻ Revive: waiting for a login before resuming ${name} session ${shortId(rec.session)}. Ctrl+C skips it.`;
   const body = [
+    // After a reboot on a Linux desktop, the terminals come back before anyone
+    // logs in. An agent started then can reach for the keyring (an MCP server's
+    // password) while it is locked and no display exists to ask for it, which
+    // wedges gnome-keyring for everyone. Wait for the login's graphical session.
+    `  if command -v systemctl >/dev/null 2>&1 && systemctl -q is-enabled display-manager.service 2>/dev/null && ! systemctl --user -q is-active graphical-session.target; then`,
+    `    printf '\\033[2m%s\\033[0m\\n' ${shQuote(waiting)}`,
+    `    until systemctl --user -q is-active graphical-session.target; do sleep 2; done`,
+    `  fi`,
     `  printf '\\033[2m%s\\033[0m\\n' ${shQuote(note)}`,
     `  __revive_t=$SECONDS`,
     `  ${line}`,
