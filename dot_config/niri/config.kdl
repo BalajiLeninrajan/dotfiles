@@ -285,7 +285,7 @@ binds {
     Mod+Ctrl+O { move-workspace-up; }
 
     Mod+Return hotkey-overlay-title="Open Herdr" { spawn-sh "~/.local/bin/herdr-app"; }
-    Mod+E hotkey-overlay-title="File Manager" { spawn "nautilus" "--new-window"; }
+    Mod+E hotkey-overlay-title="File Manager" { spawn-sh "~/.local/bin/term-app yazi"; }
     Mod+B hotkey-overlay-title="Browser" { spawn "flatpak" "run" "app.zen_browser.zen"; }
 
     // Power button locks on AC and suspends on battery. Binding it replaces
