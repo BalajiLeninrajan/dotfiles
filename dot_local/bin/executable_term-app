@@ -16,8 +16,9 @@ if [ -n "$win" ]; then
 fi
 
 # Apps started from the desktop never source .zshrc, so they miss its EDITOR
-# and fall back to nano.
+# and fall back to nano, and fzf (yazi's z key) loses its colors.
 export EDITOR=nvim VISUAL=nvim
+export FZF_DEFAULT_OPTS_FILE="$HOME/.config/fzf/fzfrc"
 
 # The main Ghostty config sends ESC CR for shift+enter, which the app reads as
 # alt+enter. Unbind it here so the app gets a real shift+enter.
