@@ -695,6 +695,12 @@ export function resumeScript(rec, engine) {
     `    printf '\\033[2m%s\\033[0m\\n' ${shQuote(waiting)}`,
     `    until systemctl --user -q is-active graphical-session.target; do sleep 2; done`,
     `  fi`,
+    // DMS spends its first 12s or more compiling its UI on one core, and agents
+    // starting beside it stretch that out. Let it finish first, for 2 minutes
+    // at most so a broken shell can't hold the agents back.
+    `  if command -v systemctl >/dev/null 2>&1 && systemctl --user -q is-enabled dms.service 2>/dev/null; then`,
+    `    timeout 120 sh -c 'until systemctl --user -q is-active dms.service; do sleep 1; done'`,
+    `  fi`,
     `  printf '\\033[2m%s\\033[0m\\n' ${shQuote(note)}`,
     `  __revive_t=$SECONDS`,
     `  ${line}`,

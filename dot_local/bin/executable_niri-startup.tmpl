@@ -39,6 +39,13 @@ column() {
     niri msg action set-column-display tabbed
 }
 
+# Let DMS finish loading first. It compiles its UI on one core for 12s or
+# more, and four terminal apps starting beside it stretch that out. Give up
+# after 2 minutes so a broken shell can't keep the apps from opening.
+if systemctl --user -q is-enabled dms.service 2>/dev/null; then
+    timeout 120 sh -c 'until systemctl --user -q is-active dms.service; do sleep 0.5; done'
+fi
+
 niri msg action focus-workspace 1
 column discordo iamb
 column aerc ikhal
