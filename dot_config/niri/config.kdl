@@ -145,6 +145,10 @@ layout {
     }
     struts {
     }
+    tab-indicator {
+        place-within-column
+        length total-proportion=1.0
+    }
 }
 layer-rule {
     match namespace="^quickshell$"
