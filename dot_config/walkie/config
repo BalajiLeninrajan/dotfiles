@@ -1,0 +1,2 @@
+# The DMS pill shows dictation state; errors still notify.
+NOTIFY=0

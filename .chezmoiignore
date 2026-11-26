@@ -52,6 +52,7 @@ Library
 .config/systemd
 .config/thunderbird
 .config/tiny-dfr
+.config/walkie
 .config/wireplumber
 .config/zathura
 {{ else if eq .chezmoi.os "darwin" }}
@@ -66,6 +67,7 @@ Library
 .config/dms
 .config/dankcal
 .config/dsearch
+.config/walkie
 .config/qt5ct
 .config/qt6ct
 .config/environment.d

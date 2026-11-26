@@ -27,9 +27,21 @@
   ;; exiting. Recovering after a resume still needs a restart; see
   ;; kanata-resume.service.
   linux-continue-if-no-devs-found yes
+  ;; Lets right Super run walkie dictation (see @dictate). Needs the
+  ;; kanata_linux_cmd_allowed_x64 build; the plain one refuses this config.
+  danger-enable-cmd yes
 {{- end }}
   process-unmapped-keys no
 )
+{{- if ne .chezmoi.os "darwin" }}
+
+;; Hold-to-dictate with walkie (github.com/BalajiLeninrajan/walkie). niri has
+;; no key-release binds, so kanata starts the recording on press and stops it
+;; on release. On macOS Hex reads right Command itself.
+(defvirtualkeys
+  walkie-stop (cmd {{ .chezmoi.homeDir }}/.local/bin/walkie stop)
+)
+{{- end }}
 
 (defsrc
   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
@@ -142,6 +154,11 @@
   num (tap-hold $tap-time $hold-time l{{ $mid }} (layer-toggle num))
   spc (tap-hold $tap-time $hold-time spc (layer-toggle sym))
   util (layer-toggle util)
+{{- if eq .chezmoi.os "darwin" }}
+  dictate rmet
+{{- else }}
+  dictate (multi (cmd {{ .chezmoi.homeDir }}/.local/bin/walkie start) (on-release tap-vkey walkie-stop))
+{{- end }}
 )
 
 (deflayer base
@@ -150,7 +167,7 @@
   tab  q    w    @er-e @er-r t    y    @ui-u @ui-i o    p    [    ]    \
   esc  @a   @s   @df-d @df-f g    @h   @jk-j @jk-k @l  @;     '   ret
   @util z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl @num lalt          @spc           ralt rmet rctl
+  lctl @num lalt          @spc           ralt @dictate rctl
 )
 
 (deflayer num
