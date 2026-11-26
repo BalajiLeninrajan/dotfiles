@@ -128,6 +128,8 @@ Home row mods are the same on both platforms: Cmd/Super on the ring finger (`s`/
 
 ### Kanata on Linux
 
+The binary at `~/.local/bin/kanata` has to be `kanata_linux_cmd_allowed_x64` from the release's `linux-binaries-x64.zip`. Right Super runs `hex dictation start` on press and `stop` on release, because niri can't bind key releases, and the plain build refuses a config with `cmd` actions.
+
 The daemon runs as a systemd **user** service, `.config/systemd/user/kanata.service`. It needs no root at runtime, given a udev rule granting the `input` group access to `/dev/uinput`:
 
 ```sh
