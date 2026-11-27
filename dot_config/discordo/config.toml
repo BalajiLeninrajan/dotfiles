@@ -14,6 +14,10 @@ auto_expand_folders = false
 [members_tree]
 visible = false
 
+# Esc leaves insert mode for vim's normal mode instead of clearing the text.
+[composer]
+vim_mode = true
+
 # Up in an empty composer no longer edits the last message.
 [keybinds.composer]
 edit_last = ""
